@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0055)file:///C:/Users/conta/Downloads/painel_vendas_2_4.html -->
+<!-- saved from url=(0055)file:///C:/Users/conta/Downloads/painel_vendas_2_2.html -->
 <html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel de Estoque &amp; Vendas</title>
-<script src="./Index_files/chart.umd.js.download"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;font-size:13px;background:#f5f5f3;color:#1a1a18;min-height:100vh}
@@ -577,15 +577,15 @@ tr:hover td{background:#f8f8f6}
 <div id="sec-dash" class="sec">
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:1rem">
     <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em">Período dos gráficos:</div>
-    <button class="btn btn-sm dash-per" onclick="setDashPeriodo(&#39;7d&#39;)">7 dias</button>
-    <button class="btn btn-sm dash-per active" onclick="setDashPeriodo(&#39;6m&#39;)">6 meses</button>
-    <button class="btn btn-sm dash-per" onclick="setDashPeriodo(&#39;3m&#39;)">3 meses</button>
-    <button class="btn btn-sm dash-per" onclick="setDashPeriodo(&#39;12m&#39;)">12 meses</button>
-    <button class="btn btn-sm dash-per" onclick="setDashPeriodo(&#39;ano&#39;)">Este ano</button>
+    <button class="btn btn-sm dash-per active" onclick="setDashPeriodo('7d')">7 dias</button>
+    <button class="btn btn-sm dash-per" onclick="setDashPeriodo('30d')">30 dias</button>
+    <button class="btn btn-sm dash-per" onclick="setDashPeriodo('90d')">90 dias</button>
+    <button class="btn btn-sm dash-per" onclick="setDashPeriodo('6m')">6 meses</button>
+    <button class="btn btn-sm dash-per" onclick="setDashPeriodo('12m')">12 meses</button>
     <div style="display:flex;gap:4px;align-items:center;margin-left:4px">
-      <input type="date" id="dash-ini" style="width:130px;font-size:11px;padding:4px 8px" onchange="setDashPeriodo(&#39;custom&#39;)">
+      <input type="date" id="dash-ini" style="width:130px;font-size:11px;padding:4px 8px" onchange="setDashPeriodo('custom')">
       <span style="font-size:11px;color:#888">até</span>
-      <input type="date" id="dash-fim" style="width:130px;font-size:11px;padding:4px 8px" onchange="setDashPeriodo(&#39;custom&#39;)">
+      <input type="date" id="dash-fim" style="width:130px;font-size:11px;padding:4px 8px" onchange="setDashPeriodo('custom')">
     </div>
   </div>
   <div class="sl">Esta semana</div><div class="m4" id="d-sem"></div>
@@ -1354,31 +1354,36 @@ function calcLucroConjPeriodo(ini,fim){
 }
 function mc(l,v,sub,cls=''){return`<div class="met"><div class="met-l">${l}</div><div class="met-v ${cls}">${v}</div>${sub?`<div class="met-sub">${sub}</div>`:''}</div>`}
 
-let dashPeriodo='6m';
+let dashPeriodo='7d';
 function setDashPeriodo(p){
   dashPeriodo=p;
   document.querySelectorAll('.dash-per').forEach(b=>b.classList.remove('active'));
-  const map={'7d':0,'6m':1,'3m':2,'12m':3,'ano':4};
+  const map={'7d':0,'30d':1,'90d':2,'6m':3,'12m':4};
   const btns=document.querySelectorAll('.dash-per');
   if(p!=='custom'&&btns[map[p]])btns[map[p]].classList.add('active');
   renderDash();
 }
 function getDashDias(){
-  // retorna array de dias para o período de 7 dias
   const now=new Date();
   const dias=[];
   for(let i=6;i>=0;i--){
     const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);
-    dias.push({
-      date:d,
-      label:`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`
-    });
+    dias.push({date:d,label:`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`});
+  }
+  return dias;
+}
+function getDashDiasN(n){
+  const now=new Date();
+  const dias=[];
+  for(let i=n-1;i>=0;i--){
+    const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);
+    dias.push({date:d,label:`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`});
   }
   return dias;
 }
 function getDashMeses(){
   const now=new Date();
-  if(dashPeriodo==='7d') return []; // tratado separado
+  if(dashPeriodo==='7d'||dashPeriodo==='30d'||dashPeriodo==='90d') return [];
   if(dashPeriodo==='custom'){
     const ini=document.getElementById('dash-ini')?.value;
     const fim=document.getElementById('dash-fim')?.value;
@@ -1392,14 +1397,7 @@ function getDashMeses(){
     }
     return meses;
   }
-  let n=6;
-  if(dashPeriodo==='3m')n=3;
-  else if(dashPeriodo==='12m')n=12;
-  else if(dashPeriodo==='ano'){
-    const meses=[];
-    for(let m=0;m<12;m++)meses.push({y:now.getFullYear(),m,label:`${String(m+1).padStart(2,'0')}/${now.getFullYear()}`});
-    return meses;
-  }
+  const n=dashPeriodo==='12m'?12:6;
   const meses=[];
   for(let i=n-1;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);meses.push({y:d.getFullYear(),m:d.getMonth(),label:`${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`});}
   return meses;
@@ -1439,11 +1437,13 @@ function renderDash(){
   if(charts.l)charts.l.destroy();
   if(charts.i)charts.i.destroy();
 
-  if(dashPeriodo==='7d'){
-    const dias=getDashDias();
+  if(dashPeriodo==='7d'||dashPeriodo==='30d'||dashPeriodo==='90d'){
+    const n=dashPeriodo==='7d'?7:dashPeriodo==='30d'?30:90;
+    const dias=getDashDiasN(n);
     const labels=dias.map(d=>d.label);
-    document.getElementById('dash-chart-title-l').textContent='Lucro por dia (R$) — Últimos 7 dias';
-    document.getElementById('dash-chart-title-i').textContent='Itens vendidos por dia — Últimos 7 dias';
+    const nLabel=dashPeriodo==='7d'?'7 dias':dashPeriodo==='30d'?'30 dias':'90 dias';
+    document.getElementById('dash-chart-title-l').textContent=`Lucro por dia (R$) — Últimos ${nLabel}`;
+    document.getElementById('dash-chart-title-i').textContent=`Itens vendidos por dia — Últimos ${nLabel}`;
     const lucros=dias.map(({date})=>{
       const ini=new Date(date.getFullYear(),date.getMonth(),date.getDate(),0,0,0);
       const fim=new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59,999);
@@ -1461,7 +1461,7 @@ function renderDash(){
   const meses=getDashMeses();
   if(!meses.length) return;
 
-  const periodoLabel=dashPeriodo==='custom'?'Período personalizado':dashPeriodo==='ano'?`Ano ${new Date().getFullYear()}`:dashPeriodo==='12m'?'Últimos 12 meses':dashPeriodo==='3m'?'Últimos 3 meses':'Últimos 6 meses';
+  const periodoLabel=dashPeriodo==='custom'?'Período personalizado':dashPeriodo==='12m'?'Últimos 12 meses':'Últimos 6 meses';
   document.getElementById('dash-chart-title-l').textContent=`Lucro por mês (R$) — ${periodoLabel}`;
   document.getElementById('dash-chart-title-i').textContent=`Itens vendidos por mês — ${periodoLabel}`;
 
