@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0055)file:///C:/Users/conta/Downloads/painel_vendas_2_2.html -->
+<!-- saved from url=(0055)file:///C:/Users/conta/Downloads/painel_vendas_2_3.html -->
 <html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel de Estoque &amp; Vendas</title>
-<script src="file:///C:/Users/conta/Downloads/Painel%20de%20Estoque%20&amp;%20Vendas_files/chart.umd.js.download"></script>
+<script src="./Index_files/chart.umd.js.download"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;font-size:13px;background:#f5f5f3;color:#1a1a18;min-height:100vh}
@@ -577,6 +577,7 @@ tr:hover td{background:#f8f8f6}
 <div id="sec-dash" class="sec">
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:1rem">
     <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em">Período dos gráficos:</div>
+    <button class="btn btn-sm dash-per" onclick="setDashPeriodo(&#39;7d&#39;)">7 dias</button>
     <button class="btn btn-sm dash-per active" onclick="setDashPeriodo(&#39;6m&#39;)">6 meses</button>
     <button class="btn btn-sm dash-per" onclick="setDashPeriodo(&#39;3m&#39;)">3 meses</button>
     <button class="btn btn-sm dash-per" onclick="setDashPeriodo(&#39;12m&#39;)">12 meses</button>
@@ -1357,13 +1358,27 @@ let dashPeriodo='6m';
 function setDashPeriodo(p){
   dashPeriodo=p;
   document.querySelectorAll('.dash-per').forEach(b=>b.classList.remove('active'));
-  const map={'6m':0,'3m':1,'12m':2,'ano':3};
+  const map={'7d':0,'6m':1,'3m':2,'12m':3,'ano':4};
   const btns=document.querySelectorAll('.dash-per');
   if(p!=='custom'&&btns[map[p]])btns[map[p]].classList.add('active');
   renderDash();
 }
+function getDashDias(){
+  // retorna array de dias para o período de 7 dias
+  const now=new Date();
+  const dias=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);
+    dias.push({
+      date:d,
+      label:`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`
+    });
+  }
+  return dias;
+}
 function getDashMeses(){
   const now=new Date();
+  if(dashPeriodo==='7d') return []; // tratado separado
   if(dashPeriodo==='custom'){
     const ini=document.getElementById('dash-ini')?.value;
     const fim=document.getElementById('dash-fim')?.value;
@@ -1421,12 +1436,31 @@ function renderDash(){
     mc('Em aberto',conjAt+' conj. · '+projAt+' proj.','aguardando conclusão','a');
 
   // gráficos com período selecionado
-  const meses=getDashMeses();
-  if(!meses.length){
-    if(charts.l)charts.l.destroy();
-    if(charts.i)charts.i.destroy();
+  if(charts.l)charts.l.destroy();
+  if(charts.i)charts.i.destroy();
+
+  if(dashPeriodo==='7d'){
+    const dias=getDashDias();
+    const labels=dias.map(d=>d.label);
+    document.getElementById('dash-chart-title-l').textContent='Lucro por dia (R$) — Últimos 7 dias';
+    document.getElementById('dash-chart-title-i').textContent='Itens vendidos por dia — Últimos 7 dias';
+    const lucros=dias.map(({date})=>{
+      const ini=new Date(date.getFullYear(),date.getMonth(),date.getDate(),0,0,0);
+      const fim=new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59,999);
+      return Math.round(calcPeriodo(ini,fim).luc);
+    });
+    const itensDia=dias.map(({date})=>{
+      const ds=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+      return items.filter(i=>i.status==='Vendido'&&i.dvenda===ds).length;
+    });
+    charts.l=new Chart(document.getElementById('ch-l'),{type:'bar',data:{labels,datasets:[{label:'Lucro',data:lucros,backgroundColor:lucros.map(v=>v>=0?'#5dcaa5':'#f09595'),borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'R$'+v.toLocaleString('pt-BR')}}}}});
+    charts.i=new Chart(document.getElementById('ch-i'),{type:'bar',data:{labels,datasets:[{label:'Itens',data:itensDia,backgroundColor:'#85b7eb',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{stepSize:1}}}}});
     return;
   }
+
+  const meses=getDashMeses();
+  if(!meses.length) return;
+
   const periodoLabel=dashPeriodo==='custom'?'Período personalizado':dashPeriodo==='ano'?`Ano ${new Date().getFullYear()}`:dashPeriodo==='12m'?'Últimos 12 meses':dashPeriodo==='3m'?'Últimos 3 meses':'Últimos 6 meses';
   document.getElementById('dash-chart-title-l').textContent=`Lucro por mês (R$) — ${periodoLabel}`;
   document.getElementById('dash-chart-title-i').textContent=`Itens vendidos por mês — ${periodoLabel}`;
@@ -1437,7 +1471,6 @@ function renderDash(){
   });
   const itensMes=meses.map(({y,m})=>items.filter(i=>i.status==='Vendido'&&i.dvenda&&new Date(i.dvenda+'T12:00:00').getFullYear()===y&&new Date(i.dvenda+'T12:00:00').getMonth()===m).length);
   const labels=meses.map(x=>x.label);
-  if(charts.l)charts.l.destroy();if(charts.i)charts.i.destroy();
   charts.l=new Chart(document.getElementById('ch-l'),{type:'bar',data:{labels,datasets:[{label:'Lucro',data:lucros,backgroundColor:lucros.map(v=>v>=0?'#5dcaa5':'#f09595'),borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'R$'+v.toLocaleString('pt-BR')}}}}});
   charts.i=new Chart(document.getElementById('ch-i'),{type:'bar',data:{labels,datasets:[{label:'Itens',data:itensMes,backgroundColor:'#85b7eb',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{stepSize:1}}}}});
 }
