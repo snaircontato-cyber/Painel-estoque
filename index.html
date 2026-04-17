@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0056)file:///C:/Users/conta/Downloads/painel_vendas_2_11.html -->
+<!-- saved from url=(0055)file:///C:/Users/conta/Downloads/painel_vendas_2_2.html -->
 <html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,6 +65,7 @@ tr:hover td{background:#f8f8f6}
 .met-sub{font-size:10px;color:#bbb;margin-top:2px}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
 .chart-wrap{position:relative;width:100%;height:180px}
+.dash-per.active{background:#f0f0ee;color:#1a1a18;font-weight:600;border-color:#aaa}
 .sl{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
 .divider{border:none;border-top:1px solid #e5e5e2;margin:.75rem 0}
 /* CONJUNTOS */
@@ -103,7 +104,7 @@ tr:hover td{background:#f8f8f6}
 @media(max-width:700px){.fg2,.fg3,.spec-grid,.two-col,.m4,.conj-resumo{grid-template-columns:1fr 1fr}}
 </style>
 </head>
-<body>
+<body cz-shortcut-listen="true">
 <div class="container">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:8px">
   <h1 style="margin-bottom:0">Estoque &amp; Vendas</h1>
@@ -571,15 +572,28 @@ tr:hover td{background:#f8f8f6}
   </table></div>
 </div>
 
+
 <!-- ===== DASHBOARD ===== -->
 <div id="sec-dash" class="sec">
-  <div class="sl">Esta semana</div><div class="m4" id="d-sem"><div class="met"><div class="met-l">Vendas</div><div class="met-v ">3</div></div><div class="met"><div class="met-l">Faturamento</div><div class="met-v ">R$ 3.750,00</div></div><div class="met"><div class="met-l">Lucro</div><div class="met-v g">R$ 0,00</div></div><div class="met"><div class="met-l">Resultado conj.</div><div class="met-v g">R$ 800,73</div><div class="met-sub">faturado − custo total</div></div></div>
-  <div class="sl">Este mês</div><div class="m4" id="d-mes"><div class="met"><div class="met-l">Vendas</div><div class="met-v ">3</div></div><div class="met"><div class="met-l">Faturamento</div><div class="met-v ">R$ 3.750,00</div></div><div class="met"><div class="met-l">Lucro</div><div class="met-v g">R$ 0,00</div></div><div class="met"><div class="met-l">Resultado conj.</div><div class="met-v g">R$ 800,73</div><div class="met-sub">faturado − custo total</div></div></div>
-  <div class="sl">Acumulado geral</div><div class="m4" id="d-ger"><div class="met"><div class="met-l">Receita total</div><div class="met-v ">R$ 3.750,00</div></div><div class="met"><div class="met-l">Lucro total</div><div class="met-v g">R$ 800,73</div><div class="met-sub">conj. fechados + individuais</div></div><div class="met"><div class="met-l">Resultado conj. em aberto</div><div class="met-v g">R$ 800,73</div><div class="met-sub">1 conj. incompleto(s) — faturado − custo</div></div><div class="met"><div class="met-l">Em aberto</div><div class="met-v a">1 conj. · 1 proj.</div><div class="met-sub">aguardando conclusão</div></div></div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:1rem">
+    <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em">Período dos gráficos:</div>
+    <button class="btn btn-sm dash-per active" onclick="setDashPeriodo(&#39;6m&#39;)">6 meses</button>
+    <button class="btn btn-sm dash-per" onclick="setDashPeriodo(&#39;3m&#39;)">3 meses</button>
+    <button class="btn btn-sm dash-per" onclick="setDashPeriodo(&#39;12m&#39;)">12 meses</button>
+    <button class="btn btn-sm dash-per" onclick="setDashPeriodo(&#39;ano&#39;)">Este ano</button>
+    <div style="display:flex;gap:4px;align-items:center;margin-left:4px">
+      <input type="date" id="dash-ini" style="width:130px;font-size:11px;padding:4px 8px" onchange="setDashPeriodo(&#39;custom&#39;)">
+      <span style="font-size:11px;color:#888">até</span>
+      <input type="date" id="dash-fim" style="width:130px;font-size:11px;padding:4px 8px" onchange="setDashPeriodo(&#39;custom&#39;)">
+    </div>
+  </div>
+  <div class="sl">Esta semana</div><div class="m4" id="d-sem"></div>
+  <div class="sl">Este mês</div><div class="m4" id="d-mes"></div>
+  <div class="sl">Acumulado geral</div><div class="m4" id="d-ger"></div>
   <hr class="divider">
   <div class="two-col">
-    <div class="card"><div class="card-title">Lucro por mês (R$)</div><div class="chart-wrap"><canvas id="ch-l" role="img" aria-label="Lucro mensal"></canvas></div></div>
-    <div class="card"><div class="card-title">Itens vendidos por mês</div><div class="chart-wrap"><canvas id="ch-i" role="img" aria-label="Itens vendidos por mês"></canvas></div></div>
+    <div class="card"><div class="card-title" id="dash-chart-title-l">Lucro por mês (R$)</div><div class="chart-wrap"><canvas id="ch-l" role="img" aria-label="Lucro mensal"></canvas></div></div>
+    <div class="card"><div class="card-title" id="dash-chart-title-i">Itens vendidos por mês</div><div class="chart-wrap"><canvas id="ch-i" role="img" aria-label="Itens vendidos por mês"></canvas></div></div>
   </div>
 </div>
 
@@ -1339,6 +1353,42 @@ function calcLucroConjPeriodo(ini,fim){
 }
 function mc(l,v,sub,cls=''){return`<div class="met"><div class="met-l">${l}</div><div class="met-v ${cls}">${v}</div>${sub?`<div class="met-sub">${sub}</div>`:''}</div>`}
 
+let dashPeriodo='6m';
+function setDashPeriodo(p){
+  dashPeriodo=p;
+  document.querySelectorAll('.dash-per').forEach(b=>b.classList.remove('active'));
+  const map={'6m':0,'3m':1,'12m':2,'ano':3};
+  const btns=document.querySelectorAll('.dash-per');
+  if(p!=='custom'&&btns[map[p]])btns[map[p]].classList.add('active');
+  renderDash();
+}
+function getDashMeses(){
+  const now=new Date();
+  if(dashPeriodo==='custom'){
+    const ini=document.getElementById('dash-ini')?.value;
+    const fim=document.getElementById('dash-fim')?.value;
+    if(!ini||!fim)return[];
+    const start=new Date(ini+'T00:00:00'),end=new Date(fim+'T23:59:59');
+    const meses=[];
+    let cur=new Date(start.getFullYear(),start.getMonth(),1);
+    while(cur<=end){
+      meses.push({y:cur.getFullYear(),m:cur.getMonth(),label:`${String(cur.getMonth()+1).padStart(2,'0')}/${cur.getFullYear()}`});
+      cur=new Date(cur.getFullYear(),cur.getMonth()+1,1);
+    }
+    return meses;
+  }
+  let n=6;
+  if(dashPeriodo==='3m')n=3;
+  else if(dashPeriodo==='12m')n=12;
+  else if(dashPeriodo==='ano'){
+    const meses=[];
+    for(let m=0;m<12;m++)meses.push({y:now.getFullYear(),m,label:`${String(m+1).padStart(2,'0')}/${now.getFullYear()}`});
+    return meses;
+  }
+  const meses=[];
+  for(let i=n-1;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);meses.push({y:d.getFullYear(),m:d.getMonth(),label:`${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`});}
+  return meses;
+}
 function renderDash(){
   const{ini:si,fim:sf}=semAtual(),{ini:mi,fim:mf}=mesAtual();
   const sem=calcPeriodo(si,sf),mes=calcPeriodo(mi,mf);
@@ -1347,18 +1397,12 @@ function renderDash(){
   const vindiv=items.filter(i=>!i.conjId&&i.status==='Vendido');
   const trI=vindiv.reduce((a,i)=>a+(i.venda||0),0);
   const lucroI=vindiv.reduce((a,i)=>a+(i.venda||0)-(i.custo+custoExtrasItem(i.id)),0);
-  // geral acumulado — conjuntos (lucro proporcional de todos, parciais e completos)
   const lucroC=conjuntos.reduce((a,c)=>a+lucroParcialConj(c),0);
   const recC=conjuntos.reduce((a,c)=>a+items.filter(i=>i.conjId===c.id&&i.status==='Vendido').reduce((b,i)=>b+(i.venda||0),0),0);
   const totalRec=trI+recC;
   const totalLuc=lucroI+lucroC;
-
-  // conjuntos parciais em aberto
   const conjParciais=conjuntos.filter(c=>{const ci=items.filter(i=>i.conjId===c.id);return ci.some(i=>i.status==='Vendido')&&!ci.every(i=>i.status==='Vendido');});
   const lucroParciaisTotal=conjParciais.reduce((a,c)=>a+lucroParcialConj(c),0);
-
-  const est=items.filter(i=>i.status!=='Vendido');
-  const ev=est.filter(i=>!i.conjId).reduce((a,i)=>a+i.custo,0);
   const conjAt=conjuntos.filter(c=>!items.filter(i=>i.conjId===c.id).every(i=>i.status==='Vendido')||items.filter(i=>i.conjId===c.id).length===0).length;
   const projAt=projetos.filter(p=>!p.finalizado).length;
 
@@ -1366,20 +1410,26 @@ function renderDash(){
     mc('Vendas',sem.n)+mc('Faturamento',fmt(sem.rec))+
     mc('Lucro',fmt(sem.luc),null,sem.luc>=0?'g':'r')+
     mc('Resultado conj.',fmt(calcLucroConjPeriodo(si,sf)),'faturado − custo total',calcLucroConjPeriodo(si,sf)>=0?'g':'r');
-
   document.getElementById('d-mes').innerHTML=
     mc('Vendas',mes.n)+mc('Faturamento',fmt(mes.rec))+
     mc('Lucro',fmt(mes.luc),null,mes.luc>=0?'g':'r')+
     mc('Resultado conj.',fmt(calcLucroConjPeriodo(mi,mf)),'faturado − custo total',calcLucroConjPeriodo(mi,mf)>=0?'g':'r');
-
   document.getElementById('d-ger').innerHTML=
     mc('Receita total',fmt(totalRec))+
     mc('Lucro total',fmt(totalLuc),'conj. fechados + individuais',totalLuc>=0?'g':'r')+
     mc('Resultado conj. em aberto',fmt(lucroParciaisTotal),conjParciais.length+' conj. incompleto(s) — faturado − custo',lucroParciaisTotal>=0?'g':'r')+
     mc('Em aberto',conjAt+' conj. · '+projAt+' proj.','aguardando conclusão','a');
 
-  const now=new Date(),meses=[];
-  for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);meses.push({y:d.getFullYear(),m:d.getMonth(),label:`${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`});}
+  // gráficos com período selecionado
+  const meses=getDashMeses();
+  if(!meses.length){
+    if(charts.l)charts.l.destroy();
+    if(charts.i)charts.i.destroy();
+    return;
+  }
+  const periodoLabel=dashPeriodo==='custom'?'Período personalizado':dashPeriodo==='ano'?`Ano ${new Date().getFullYear()}`:dashPeriodo==='12m'?'Últimos 12 meses':dashPeriodo==='3m'?'Últimos 3 meses':'Últimos 6 meses';
+  document.getElementById('dash-chart-title-l').textContent=`Lucro por mês (R$) — ${periodoLabel}`;
+  document.getElementById('dash-chart-title-i').textContent=`Itens vendidos por mês — ${periodoLabel}`;
 
   const lucros=meses.map(({y,m})=>{
     const ini=new Date(y,m,1),fim=new Date(y,m+1,0,23,59,59,999);
