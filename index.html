@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)file:///C:/Users/conta/Downloads/painel_vendas_2_11.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Estoque &amp; Vendas</title>
+<script src="file:///C:/Users/conta/Downloads/Painel%20de%20Estoque%20&amp;%20Vendas_files/chart.umd.js.download"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;font-size:13px;background:#f5f5f3;color:#1a1a18;min-height:100vh}
+.container{max-width:1200px;margin:0 auto;padding:1.25rem}
+h1{font-size:18px;font-weight:600;margin-bottom:1.25rem}
+.tabs{display:flex;border-bottom:1px solid #ddd;margin-bottom:1.25rem;flex-wrap:wrap}
+.tab{padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.active{color:#1a1a18;border-bottom:2px solid #1a1a18}
+.sec{display:none}.sec.active{display:block}
+.card{background:#fff;border:1px solid #e5e5e2;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+.card-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.tipo-tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.tt{padding:5px 14px;font-size:12px;cursor:pointer;border:1px solid #ddd;border-radius:8px;background:transparent;color:#888;white-space:nowrap}
+.tt.active{background:#f0f0ee;color:#1a1a18;font-weight:500}
+.tf{display:none}.tf.active{display:block}
+.fg{display:grid;gap:7px;margin-bottom:8px}
+.fg2{grid-template-columns:1fr 1fr}
+.fg3{grid-template-columns:1fr 1fr 1fr}
+input,select{font-size:12px;padding:7px 10px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a18;width:100%}
+input:focus,select:focus{outline:none;border-color:#aaa}
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.spec-group{background:#f8f8f6;border-radius:8px;padding:8px 10px}
+.spec-group-label{font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.spec-group input{background:#fff;margin-bottom:4px}
+.spec-group input:last-child{margin-bottom:0}
+.btn{padding:7px 15px;font-size:12px;font-weight:500;border:1px solid #ddd;border-radius:8px;cursor:pointer;background:#fff;color:#1a1a18}
+.btn:hover{background:#f5f5f3}
+.btn-g{border-color:#5dcaa5;color:#0f6e56;background:#e1f5ee}.btn-g:hover{background:#c5eedd}
+.btn-r{border-color:#f09595;color:#a32d2d}.btn-r:hover{background:#fcebeb}
+.btn-b{border-color:#85b7eb;color:#185fa5}.btn-b:hover{background:#e6f1fb}
+.btn-a{border-color:#fac775;color:#854f0b;background:#faeeda}.btn-a:hover{background:#f5ddb0}
+.btn-p{border-color:#afa9ec;color:#534ab7;background:#eeedfe}.btn-p:hover{background:#d8d5f8}
+.btn-sm{padding:3px 9px;font-size:11px}
+.sr{display:flex;gap:7px;margin-bottom:.75rem;flex-wrap:wrap}
+.sr input{flex:1;min-width:140px}
+.sr select{width:auto}
+.tw{overflow-x:auto;border:1px solid #e5e5e2;border-radius:12px;margin-bottom:1rem;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:8px 10px;font-weight:500;color:#888;border-bottom:1px solid #e5e5e2;white-space:nowrap;background:#f8f8f6}
+td{padding:8px 10px;border-bottom:1px solid #e5e5e2;white-space:nowrap;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8f8f6}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600}
+.b-est{background:#e1f5ee;color:#0f6e56}
+.b-res{background:#faeeda;color:#854f0b}
+.b-ven{background:#ebebeb;color:#555}
+.b-pc{background:#e6f1fb;color:#185fa5}
+.b-comp{background:#eeedfe;color:#534ab7}
+.b-conj{background:#faece7;color:#993c1d}
+.b-proj{background:#faeeda;color:#854f0b}
+.b-div{background:#f0eef8;color:#6a5acd}
+.empty{text-align:center;padding:2.5rem;color:#bbb}
+.m4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem}
+.met{background:#fff;border:1px solid #e5e5e2;border-radius:10px;padding:12px 14px}
+.met-l{font-size:11px;color:#888;margin-bottom:4px}
+.met-v{font-size:17px;font-weight:600;color:#1a1a18}
+.met-v.g{color:#0f6e56}.met-v.r{color:#a32d2d}.met-v.a{color:#854f0b}
+.met-sub{font-size:10px;color:#bbb;margin-top:2px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.chart-wrap{position:relative;width:100%;height:180px}
+.sl{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
+.divider{border:none;border-top:1px solid #e5e5e2;margin:.75rem 0}
+/* CONJUNTOS */
+.conj-card{background:#fff;border:1px solid #e5e5e2;border-radius:12px;padding:1rem 1.25rem;margin-bottom:.75rem}
+.conj-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px;flex-wrap:wrap}
+.conj-resumo{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.conj-met{background:#f8f8f6;border-radius:8px;padding:7px 10px}
+.conj-met-l{font-size:10px;color:#888;margin-bottom:2px}
+.conj-met-v{font-size:13px;font-weight:600}
+.item-row{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #f5f5f3;font-size:12px;flex-wrap:wrap}
+.item-row:last-child{border-bottom:none}
+.progress-bar{background:#f0f0ee;border-radius:4px;height:6px;margin-top:6px;overflow:hidden;margin-bottom:10px}
+.progress-fill{height:100%;border-radius:4px;background:#5dcaa5;transition:width .3s}
+/* PROJETOS */
+.proj-card{background:#fff;border:1px solid #e5e5e2;border-radius:12px;padding:1rem 1.25rem;margin-bottom:.75rem}
+.proj-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.peca-row{display:flex;gap:6px;align-items:center;margin-bottom:4px;font-size:12px}
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:flex-start;justify-content:center;padding-top:40px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border:1px solid #ddd;border-radius:14px;padding:1.25rem;width:420px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.12);max-height:85vh;overflow-y:auto}
+.modal-wide{width:560px}
+.modal h3{font-size:14px;font-weight:600;margin-bottom:12px}
+.modal input,.modal select{margin-bottom:8px}
+.modal-btns{display:flex;gap:7px;justify-content:flex-end;margin-top:6px}
+.ficha-rows{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;margin-top:8px}
+.fr{display:flex;gap:6px;border-bottom:1px solid #f0f0ee;padding:5px 0;font-size:12px}
+.fr:last-child{border-bottom:none}
+.fk{color:#888;min-width:110px;flex-shrink:0}
+.fv{color:#1a1a18;font-weight:500}
+.acoes{display:flex;gap:4px;flex-wrap:wrap}
+.info-box{background:#e6f1fb;border:1px solid #b5d4f4;border-radius:8px;padding:8px 12px;font-size:12px;color:#185fa5;margin-bottom:10px}
+.warn-box{background:#faeeda;border:1px solid #fac775;border-radius:8px;padding:8px 12px;font-size:12px;color:#854f0b;margin-bottom:10px}
+.sml{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.04em;margin:10px 0 6px}
+.conj-tag{font-size:10px;background:#faece7;color:#993c1d;padding:1px 6px;border-radius:10px;font-weight:600;margin-left:4px}
+@media(max-width:700px){.fg2,.fg3,.spec-grid,.two-col,.m4,.conj-resumo{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:8px">
+  <h1 style="margin-bottom:0">Estoque &amp; Vendas</h1>
+  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+    <span style="font-size:11px;color:#888" id="backup-info">5 itens · 1 conj. · 1 proj. · 3 extras</span>
+    <span id="sync-status" style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgb(225, 245, 238); color: rgb(15, 110, 86); font-weight: 600;">☁️ Sincronizado</span>
+    <button class="btn btn-sm btn-g" onclick="exportarBackup()" title="Baixar todos os dados">⬇ Exportar backup</button>
+    <label class="btn btn-sm btn-b" style="cursor:pointer;margin:0" title="Restaurar dados de um arquivo JSON">⬆ Importar backup<input type="file" accept=".json" onchange="importarBackup(event)" style="display:none"></label>
+  </div>
+</div>
+<div class="tabs">
+  <button class="tab active" onclick="goTab(&#39;estoque&#39;)">Estoque</button>
+  <button class="tab" onclick="goTab(&#39;conjuntos&#39;)">Conjuntos / Setups</button>
+  <button class="tab" onclick="goTab(&#39;projetos&#39;)">Projetos de Montagem</button>
+  <button class="tab" onclick="goTab(&#39;extras&#39;)">Itens Extras</button>
+  <button class="tab" onclick="goTab(&#39;vendas&#39;)">Vendas</button>
+  <button class="tab" onclick="goTab(&#39;dash&#39;)">Dashboard</button>
+</div>
+
+<!-- ===== ESTOQUE ===== -->
+<div id="sec-estoque" class="sec active">
+  <div class="card">
+    <div class="card-title">Registrar item no estoque</div>
+    <div class="tipo-tabs">
+      <button class="tt active" onclick="setTipo(&#39;pc&#39;)">PC completo</button>
+      <button class="tt" onclick="setTipo(&#39;comp&#39;)">Componente / periférico</button>
+      <button class="tt" onclick="setTipo(&#39;div&#39;)">Item diverso</button>
+    </div>
+    <div id="tf-pc" class="tf active">
+      <div class="fg fg2">
+        <input id="p-nome" placeholder="Nome do PC (ex: Ryzen 5 5600 + GTX 1650 Super)">
+        <input id="p-cond" placeholder="Condição (Ótimo / Bom / Com defeito)">
+        <input id="p-custo" type="number" placeholder="Custo de compra (R$)">
+        <input id="p-dcomp" type="date">
+      </div>
+      <div class="spec-grid">
+        <div class="spec-group"><div class="spec-group-label">CPU</div><input id="p-cpu" placeholder="Ex: Ryzen 5 5600X"></div>
+        <div class="spec-group"><div class="spec-group-label">GPU</div><input id="p-gpu" placeholder="Ex: GTX 1650 Super 4GB"></div>
+        <div class="spec-group"><div class="spec-group-label">RAM</div><input id="p-ram" placeholder="Ex: 16GB DDR4 3200MHz"></div>
+        <div class="spec-group"><div class="spec-group-label">Armazenamento</div><input id="p-sto" placeholder="Ex: SSD 480GB + HD 1TB"></div>
+        <div class="spec-group"><div class="spec-group-label">Placa-mãe</div><input id="p-mb" placeholder="Ex: B450M Aorus Elite"></div>
+        <div class="spec-group"><div class="spec-group-label">Fonte</div><input id="p-psu" placeholder="Ex: Corsair 550W 80+ Bronze"></div>
+        <div class="spec-group"><div class="spec-group-label">Cooler / Fans</div><input id="p-cool" placeholder="Cooler"><input id="p-fans" placeholder="Fans (ex: 3x 120mm RGB)"></div>
+        <div class="spec-group"><div class="spec-group-label">Gabinete</div><input id="p-gab" placeholder="Ex: Aerocool Cylon RGB"></div>
+      </div>
+    </div>
+    <div id="tf-comp" class="tf">
+      <div class="fg fg3">
+        <input id="c-desc" placeholder="Descrição (ex: RTX 3060 12GB ASUS)" style="grid-column:1/-1">
+        <select id="c-cat"><option>CPU</option><option>GPU</option><option>RAM</option><option>Armazenamento</option><option>Placa-mãe</option><option>Fonte</option><option>Cooler</option><option>Gabinete</option><option>Monitor</option><option>Teclado</option><option>Mouse</option><option>Headset</option><option>Periférico</option><option>Outro</option></select>
+        <input id="c-cond" placeholder="Condição">
+        <input id="c-custo" type="number" placeholder="Custo (R$)">
+        <input id="c-dcomp" type="date">
+      </div>
+    </div>
+    <div id="tf-div" class="tf">
+      <div class="fg fg2">
+        <input id="d-desc" placeholder="Descrição (ex: Cadeira gamer, Suporte de monitor...)" style="grid-column:1/-1">
+        <input id="d-cat" placeholder="Categoria (ex: Móvel, Acessório, Eletrônico...)">
+        <input id="d-cond" placeholder="Condição">
+        <input id="d-custo" type="number" placeholder="Custo (R$)">
+        <input id="d-dcomp" type="date">
+        <input id="d-obs" placeholder="Observação (opcional)" style="grid-column:1/-1">
+      </div>
+    </div>
+    <button class="btn btn-g" onclick="addItemEstoque()">+ Adicionar ao estoque</button>
+  </div>
+  <div class="info-box" style="margin-bottom:.75rem">Para vender itens, use a aba <strong>Vendas</strong>. Aqui você gerencia o cadastro, edição e status do estoque.</div>
+  <div id="resumo-estoque" style="margin-bottom:.75rem"><div style="background:#fff;border:1px solid #e5e5e2;border-radius:12px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+    <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;flex-shrink:0">Valor em estoque</div>
+    <div style="font-size:17px;font-weight:700;color:#1a1a18;flex-shrink:0">R$ 2.850,00</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:4px">
+      <span style="font-size:11px;background:#faece7;color:#993c1d;padding:3px 9px;border-radius:20px;font-weight:600">Conjuntos: R$ 2.850,00 <span style="opacity:.7">(1)</span></span>
+    </div>
+  </div></div>
+  <div class="sr">
+    <input id="busca" placeholder="Buscar..." oninput="render()">
+    <select id="f-tipo" onchange="render()" style="width:auto"><option value="">Todos os tipos</option><option value="pc">PC completo</option><option value="comp">Componente</option><option value="div">Item diverso</option><option value="conj">De conjunto</option></select>
+    <select id="f-status" onchange="render()" style="width:auto"><option value="Em estoque">Em estoque</option><option value="Reservado">Reservado</option><option value="Vendido">Vendido</option><option value="">Todos</option></select>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>Descrição</th><th>Tipo</th><th>Cond.</th><th>Status</th><th>Custo ref.</th><th>Venda</th><th>Lucro</th><th>Dt. Compra</th><th>Dt. Venda</th><th>Comprador</th><th>Ações</th></tr></thead>
+    <tbody id="tbody"><tr>
+      <td><strong>Mouse Logitech G403 Hero</strong><span class="conj-tag">Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</span></td>
+      <td><span class="badge b-conj" title="Conjunto: Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )">Conj.</span></td><td>Bom</td>
+      <td><span class="badge b-est">Em estoque</span></td>
+      <td><span title="Custo individual não definido — ver conjunto">—</span></td>
+      <td>—</td>
+      <td style="color:#aaa;font-weight:600"><span style="color:#aaa;font-size:11px" title="Lucro calculado no conjunto">ver conjunto</span></td>
+      <td>23/03/2026</td><td>—</td>
+      <td>—</td>
+      <td><div class="acoes"><button class="btn btn-sm btn-b" onclick="abrirFicha(1776224525286)">Ficha</button><button class="btn btn-sm btn-b" onclick="abrirEdicao(1776224525286)">Editar</button><button class="btn btn-sm" onclick="reservar(1776224525286)">⊙ Reservar</button><button class="btn btn-sm btn-r" onclick="deletar(1776224525286)">✕ Excluir</button></div></td>
+    </tr><tr>
+      <td><strong>Teclado Gamer Madlions Mad68he</strong><span class="conj-tag">Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</span></td>
+      <td><span class="badge b-conj" title="Conjunto: Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )">Conj.</span></td><td>Bom</td>
+      <td><span class="badge b-est">Em estoque</span></td>
+      <td><span title="Custo individual não definido — ver conjunto">—</span></td>
+      <td>—</td>
+      <td style="color:#aaa;font-weight:600"><span style="color:#aaa;font-size:11px" title="Lucro calculado no conjunto">ver conjunto</span></td>
+      <td>23/03/2026</td><td>—</td>
+      <td>—</td>
+      <td><div class="acoes"><button class="btn btn-sm btn-b" onclick="abrirFicha(1776224525285)">Ficha</button><button class="btn btn-sm btn-b" onclick="abrirEdicao(1776224525285)">Editar</button><button class="btn btn-sm" onclick="reservar(1776224525285)">⊙ Reservar</button><button class="btn btn-sm btn-r" onclick="deletar(1776224525285)">✕ Excluir</button></div></td>
+    </tr></tbody>
+  </table></div>
+</div>
+
+<!-- ===== CONJUNTOS ===== -->
+<div id="sec-conjuntos" class="sec">
+  <div class="card">
+    <div class="card-title">Novo conjunto / setup</div>
+    <div class="info-box">Os itens do conjunto entram direto no estoque com a tag do conjunto. O lucro é calculado aqui quando todos forem vendidos, descontando os gastos extras.</div>
+    <div class="fg fg2">
+      <input id="cj-nome" placeholder="Nome (ex: Setup Gamer i5 10400F + Monitor)">
+      <input id="cj-dcomp" type="date" title="Data da compra">
+      <input id="cj-total" type="number" placeholder="Custo total pago (R$)">
+      <input id="cj-cond" placeholder="Condição geral dos itens">
+    </div>
+    <div class="sml">Itens do conjunto</div>
+    <div id="cj-itens-form"><div style="border:1px solid #e5e5e2;border-radius:10px;padding:.75rem 1rem;margin-bottom:10px">
+      <div style="display:grid;grid-template-columns:2fr 1fr auto;gap:6px;margin-bottom:8px;align-items:center">
+        <input value="" placeholder="Nome do item (ex: PC Ryzen 5 5600)" oninput="conjItensForm[0].desc=this.value">
+        <select onchange="conjItensForm[0].cat=this.value;renderConjItensForm()"><option selected="">PC completo</option><option>Monitor</option><option>Teclado</option><option>Mouse</option><option>Headset</option><option>Controle</option><option>Cadeira</option><option>Mesa</option><option>Periférico</option><option>Outro</option></select>
+        <button class="btn btn-sm btn-r" onclick="conjItensForm.splice(0,1);renderConjItensForm()">✕</button>
+      </div>
+      <div class="spec-grid">
+        <div class="spec-group"><div class="spec-group-label">CPU</div><input value="" placeholder="Ex: Ryzen 5 5600X" oninput="conjItensForm[0].specs[&#39;cpu&#39;]=this.value"></div>
+        <div class="spec-group"><div class="spec-group-label">GPU</div><input value="" placeholder="Ex: GTX 1650 Super 4GB" oninput="conjItensForm[0].specs[&#39;gpu&#39;]=this.value"></div>
+        <div class="spec-group"><div class="spec-group-label">RAM</div><input value="" placeholder="Ex: 16GB DDR4 3200MHz" oninput="conjItensForm[0].specs[&#39;ram&#39;]=this.value"></div>
+        <div class="spec-group"><div class="spec-group-label">Armazenamento</div><input value="" placeholder="Ex: SSD 480GB + HD 1TB" oninput="conjItensForm[0].specs[&#39;sto&#39;]=this.value"></div>
+        <div class="spec-group"><div class="spec-group-label">Placa-mãe</div><input value="" placeholder="Ex: B450M Aorus Elite" oninput="conjItensForm[0].specs[&#39;mb&#39;]=this.value"></div>
+        <div class="spec-group"><div class="spec-group-label">Fonte</div><input value="" placeholder="Ex: Corsair 550W 80+ Bronze" oninput="conjItensForm[0].specs[&#39;psu&#39;]=this.value"></div>
+        <div class="spec-group"><div class="spec-group-label">Cooler / Fans</div>
+          <input value="" placeholder="Cooler" oninput="conjItensForm[0].specs[&#39;cool&#39;]=this.value" style="margin-bottom:4px">
+          <input value="" placeholder="Fans (ex: 3x 120mm RGB)" oninput="conjItensForm[0].specs[&#39;fans&#39;]=this.value">
+        </div>
+        <div class="spec-group"><div class="spec-group-label">Gabinete</div><input value="" placeholder="Ex: Aerocool Cylon RGB" oninput="conjItensForm[0].specs[&#39;gab&#39;]=this.value"></div>
+      </div>
+    </div><div style="border:1px solid #e5e5e2;border-radius:10px;padding:.75rem 1rem;margin-bottom:10px">
+      <div style="display:grid;grid-template-columns:2fr 1fr auto;gap:6px;margin-bottom:8px;align-items:center">
+        <input value="" placeholder="Nome do item (ex: PC Ryzen 5 5600)" oninput="conjItensForm[1].desc=this.value">
+        <select onchange="conjItensForm[1].cat=this.value;renderConjItensForm()"><option>PC completo</option><option selected="">Monitor</option><option>Teclado</option><option>Mouse</option><option>Headset</option><option>Controle</option><option>Cadeira</option><option>Mesa</option><option>Periférico</option><option>Outro</option></select>
+        <button class="btn btn-sm btn-r" onclick="conjItensForm.splice(1,1);renderConjItensForm()">✕</button>
+      </div>
+      <div class="fg fg2" style="margin-top:4px">
+        <input value="" placeholder="Descrição adicional (modelo, cor, etc.)" oninput="conjItensForm[1].specs[&#39;descExtra&#39;]=this.value">
+        <input value="" placeholder="Condição do item" oninput="conjItensForm[1].specs[&#39;cond&#39;]=this.value">
+      </div>
+    </div></div>
+    <button class="btn btn-sm" onclick="addConjItemForm()" style="margin-bottom:12px">+ Adicionar item</button><br>
+    <button class="btn btn-g" onclick="criarConjunto()">+ Criar conjunto e adicionar ao estoque</button>
+  </div>
+  <div id="conj-lista"><div class="conj-card">
+      <div class="conj-header">
+        <div>
+          <div style="font-weight:600;font-size:14px">Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</div>
+          <div style="display:flex;gap:5px;align-items:center;margin-top:4px;flex-wrap:wrap">
+            <span class="badge b-conj">Conjunto</span>
+            <span class="badge b-est">Em andamento</span>
+            <span style="font-size:11px;color:#888">Comprado 23/03/2026</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-r" onclick="deletarConj(&#39;conj_1776224525282&#39;)">✕ Excluir</button>
+      </div>
+      <div class="conj-resumo" style="grid-template-columns:repeat(5,1fr)">
+        <div class="conj-met"><div class="conj-met-l">Custo de compra</div><div class="conj-met-v">R$ 2.800,00</div></div>
+        <div class="conj-met"><div class="conj-met-l">Gastos + extras</div><div class="conj-met-v" style="color:#854f0b">R$ 149,27</div></div>
+        <div class="conj-met"><div class="conj-met-l">Custo real</div><div class="conj-met-v">R$ 2.949,27</div></div>
+        <div class="conj-met"><div class="conj-met-l">Faturado</div><div class="conj-met-v" style="color:#185fa5">R$ 3.750,00</div></div>
+        <div class="conj-met">
+          <div class="conj-met-l">Lucro parcial</div>
+          <div class="conj-met-v" style="color:#0f6e56">+R$ 800,73</div>
+          <div style="font-size:10px;color:#bbb;margin-top:2px">3/5 vendidos</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#888;margin-bottom:4px">3 de 5 itens vendidos</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+      <div class="sml">Itens (no estoque)</div>
+      <div class="item-row">
+          <div style="flex:1;min-width:120px">
+            <strong>Headset Gamer Redragon Zeus Lite</strong> <span style="font-size:10px;color:#aaa">PC</span>
+            
+          </div>
+          <span class="badge b-ven">Vendido</span>
+          <span style="font-weight:600;color:#0f6e56;min-width:80px">R$ 150,00</span>
+          <span style="font-size:11px;color:#888">Adguibson Adguimas Ferreira Da Silva ·  15/04/2026</span>
+          <div class="acoes">
+            <button class="btn btn-sm btn-b" onclick="abrirFicha(1776224525287)">Ficha</button>
+
+          </div>
+        </div><div class="item-row">
+          <div style="flex:1;min-width:120px">
+            <strong>Mouse Logitech G403 Hero</strong> <span style="font-size:10px;color:#aaa">PC</span>
+            
+          </div>
+          <span class="badge b-est">Em estoque</span>
+          <span style="font-weight:600;color:#0f6e56;min-width:80px">—</span>
+          <span style="font-size:11px;color:#888"> </span>
+          <div class="acoes">
+            <button class="btn btn-sm btn-b" onclick="abrirFicha(1776224525286)">Ficha</button>
+
+          </div>
+        </div><div class="item-row">
+          <div style="flex:1;min-width:120px">
+            <strong>Teclado Gamer Madlions Mad68he</strong> <span style="font-size:10px;color:#aaa">PC</span>
+            <div style="font-size:11px;color:#888;margin-top:2px">Switchs Magnéticos SnapTap</div>
+          </div>
+          <span class="badge b-est">Em estoque</span>
+          <span style="font-weight:600;color:#0f6e56;min-width:80px">—</span>
+          <span style="font-size:11px;color:#888"> </span>
+          <div class="acoes">
+            <button class="btn btn-sm btn-b" onclick="abrirFicha(1776224525285)">Ficha</button>
+
+          </div>
+        </div><div class="item-row">
+          <div style="flex:1;min-width:120px">
+            <strong>Monitor Gamer SuperFrame 180hz Curvo</strong> <span style="font-size:10px;color:#aaa">PC</span>
+            
+          </div>
+          <span class="badge b-ven">Vendido</span>
+          <span style="font-weight:600;color:#0f6e56;min-width:80px">R$ 600,00</span>
+          <span style="font-size:11px;color:#888">Nathan Johann Wortmeyer ·  16/04/2026</span>
+          <div class="acoes">
+            <button class="btn btn-sm btn-b" onclick="abrirFicha(1776224525284)">Ficha</button>
+
+          </div>
+        </div><div class="item-row">
+          <div style="flex:1;min-width:120px">
+            <strong>Pc Gamer - Ryzen 5 5600 + Geforce GTX 1650 Super 4 GB</strong> <span style="font-size:10px;color:#aaa">PC</span>
+            <div style="font-size:11px;color:#888;margin-top:2px">Ryzen 5 5600 · Galax GeForce GTX 1650 Super 4 GB · Zadak 16 GB DDR4 (2x8 GB) 3000 MHz · SSD Sata 480 GB</div>
+          </div>
+          <span class="badge b-ven">Vendido</span>
+          <span style="font-weight:600;color:#0f6e56;min-width:80px">R$ 3.000,00</span>
+          <span style="font-size:11px;color:#888">Mateus Do Nascimento Dos Santos ·  13/04/2026</span>
+          <div class="acoes">
+            <button class="btn btn-sm btn-b" onclick="abrirFicha(1776224525283)">Ficha</button>
+
+          </div>
+        </div>
+      <div class="sml" style="margin-top:12px">Gastos extras</div>
+      
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 0;border-bottom:1px solid #f5f5f3">
+          <span class="badge" style="background:#f8f8f6;color:#555;flex-shrink:0">Combustível</span>
+          <span style="flex:1">Gasolina</span>
+          <span style="color:#854f0b;font-weight:600;min-width:80px;text-align:right">R$ 50,00</span>
+          <span style="color:#bbb;font-size:11px;min-width:60px">15/04/2026</span>
+          <button class="btn btn-sm btn-b" onclick="abrirEdicaoGasto(&#39;conj_1776224525282&#39;,1776224560346)">Editar</button>
+          <button class="btn btn-sm btn-r" onclick="removeGasto(&#39;conj_1776224525282&#39;,1776224560346)">✕</button>
+        </div>
+      <div style="display:flex;gap:6px;align-items:center;margin-top:10px;flex-wrap:wrap">
+        <select id="gd-tipo-conj_1776224525282" style="width:auto;font-size:11px;padding:5px 8px"><option>Combustível</option><option>Frete</option><option>Reparo</option><option>Taxa de anúncio</option><option>Embalagem</option><option>Outro</option></select>
+        <input id="gd-desc-conj_1776224525282" placeholder="Descrição do gasto" style="flex:1;font-size:11px;padding:5px 8px;min-width:100px">
+        <input id="gd-valor-conj_1776224525282" type="number" placeholder="R$" style="width:80px;font-size:11px;padding:5px 8px">
+        <button class="btn btn-sm btn-a" onclick="addGastoConj(&#39;conj_1776224525282&#39;)">+ Gasto</button>
+      </div>
+    </div></div>
+</div>
+
+<!-- ===== PROJETOS ===== -->
+<div id="sec-projetos" class="sec">
+  <div class="card">
+    <div class="card-title">Novo projeto de montagem</div>
+    <div class="fg fg2">
+      <input id="pj-nome" placeholder="Nome do projeto (ex: Build Ryzen 5 5600)">
+      <input id="pj-dini" type="date">
+    </div>
+    <button class="btn btn-p" onclick="criarProjeto()">+ Criar projeto</button>
+  </div>
+  <div id="proj-lista"><div class="proj-card">
+      <div class="proj-header">
+        <div><span class="badge b-proj" style="margin-right:6px">Em andamento</span><span style="font-weight:600">Pc Gamer</span><span style="font-size:11px;color:#888;margin-left:8px">Iniciado 01/04/2026</span></div>
+        <div style="display:flex;gap:6px;align-items:center"><span style="font-size:14px;font-weight:600;color:#0f6e56">R$ 2.351,77</span><button class="btn btn-sm btn-r" onclick="deletarProjeto(&#39;proj_1776227071748&#39;)">✕</button></div>
+      </div>
+      <div style="font-size:11px;color:#888;margin-bottom:8px">8 peça(s) adicionada(s)</div>
+      <div class="peca-row"><span style="font-size:11px;color:#aaa;min-width:90px;flex-shrink:0">CPU</span><span style="flex:1">Ryzen 5 5600</span><span style="font-weight:600;color:#0f6e56;min-width:80px;text-align:right">R$ 645,99</span><button class="btn btn-sm btn-b" onclick="abrirEdicaoPeca(&#39;proj_1776227071748&#39;,1776227130646)">Editar</button><button class="btn btn-sm btn-r" onclick="removePeca(&#39;proj_1776227071748&#39;,1776227130646)">✕</button></div><div class="peca-row"><span style="font-size:11px;color:#aaa;min-width:90px;flex-shrink:0">RAM</span><span style="flex:1">Team Group T-Force Vulcan 16 GB DDR4 (2x8GB) 3200 MHz</span><span style="font-weight:600;color:#0f6e56;min-width:80px;text-align:right">R$ 441,89</span><button class="btn btn-sm btn-b" onclick="abrirEdicaoPeca(&#39;proj_1776227071748&#39;,1776227241433)">Editar</button><button class="btn btn-sm btn-r" onclick="removePeca(&#39;proj_1776227071748&#39;,1776227241433)">✕</button></div><div class="peca-row"><span style="font-size:11px;color:#aaa;min-width:90px;flex-shrink:0">GPU</span><span style="flex:1">Radeon RX 580 Sapphire Pulse 8 GB</span><span style="font-weight:600;color:#0f6e56;min-width:80px;text-align:right">R$ 659,12</span><button class="btn btn-sm btn-b" onclick="abrirEdicaoPeca(&#39;proj_1776227071748&#39;,1776227370952)">Editar</button><button class="btn btn-sm btn-r" onclick="removePeca(&#39;proj_1776227071748&#39;,1776227370952)">✕</button></div><div class="peca-row"><span style="font-size:11px;color:#aaa;min-width:90px;flex-shrink:0">Armazenamento</span><span style="flex:1">SSD Mancer 240 GB</span><span style="font-weight:600;color:#0f6e56;min-width:80px;text-align:right">R$ 0,00</span><button class="btn btn-sm btn-b" onclick="abrirEdicaoPeca(&#39;proj_1776227071748&#39;,1776227493842)">Editar</button><button class="btn btn-sm btn-r" onclick="removePeca(&#39;proj_1776227071748&#39;,1776227493842)">✕</button></div><div class="peca-row"><span style="font-size:11px;color:#aaa;min-width:90px;flex-shrink:0">Placa-mãe</span><span style="flex:1">Asus Prime B450M Gaming BR</span><span style="font-weight:600;color:#0f6e56;min-width:80px;text-align:right">R$ 324,99</span><button class="btn btn-sm btn-b" onclick="abrirEdicaoPeca(&#39;proj_1776227071748&#39;,1776227548188)">Editar</button><button class="btn btn-sm btn-r" onclick="removePeca(&#39;proj_1776227071748&#39;,1776227548188)">✕</button></div><div class="peca-row"><span style="font-size:11px;color:#aaa;min-width:90px;flex-shrink:0">Gabinete</span><span style="flex:1">Gamer TGT Branco</span><span style="font-weight:600;color:#0f6e56;min-width:80px;text-align:right">R$ 95,90</span><button class="btn btn-sm btn-b" onclick="abrirEdicaoPeca(&#39;proj_1776227071748&#39;,1776227586783)">Editar</button><button class="btn btn-sm btn-r" onclick="removePeca(&#39;proj_1776227071748&#39;,1776227586783)">✕</button></div><div class="peca-row"><span style="font-size:11px;color:#aaa;min-width:90px;flex-shrink:0">Fan</span><span style="flex:1">5x TGT RGB</span><span style="font-weight:600;color:#0f6e56;min-width:80px;text-align:right">R$ 60,00</span><button class="btn btn-sm btn-b" onclick="abrirEdicaoPeca(&#39;proj_1776227071748&#39;,1776227631692)">Editar</button><button class="btn btn-sm btn-r" onclick="removePeca(&#39;proj_1776227071748&#39;,1776227631692)">✕</button></div><div class="peca-row"><span style="font-size:11px;color:#aaa;min-width:90px;flex-shrink:0">Fonte</span><span style="flex:1">Cougar VTE 500W PFC 80 Plus</span><span style="font-weight:600;color:#0f6e56;min-width:80px;text-align:right">R$ 123,88</span><button class="btn btn-sm btn-b" onclick="abrirEdicaoPeca(&#39;proj_1776227071748&#39;,1776227672425)">Editar</button><button class="btn btn-sm btn-r" onclick="removePeca(&#39;proj_1776227071748&#39;,1776227672425)">✕</button></div>
+      <div style="border-top:1px solid #f0f0ee;margin:10px 0 8px"></div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <select id="pp-cat-proj_1776227071748" style="width:auto;font-size:11px;padding:5px 8px"><option>CPU</option><option>GPU</option><option>RAM</option><option>Armazenamento</option><option>Placa-mãe</option><option>Fonte</option><option>Cooler</option><option>Fan</option><option>Gabinete</option><option>Outro</option></select>
+        <input id="pp-desc-proj_1776227071748" placeholder="Descrição da peça" style="flex:1;font-size:11px;padding:5px 8px">
+        <input id="pp-custo-proj_1776227071748" type="number" placeholder="R$" style="width:80px;font-size:11px;padding:5px 8px">
+        <button class="btn btn-sm btn-g" onclick="addPecaProjeto(&#39;proj_1776227071748&#39;)">+ Peça</button>
+      </div>
+      <div style="margin-top:10px"><button class="btn btn-p" onclick="abrirFinalizarProjeto(&#39;proj_1776227071748&#39;)">Finalizar montagem → entrar no estoque</button></div>
+    </div></div>
+</div>
+
+<!-- ===== ITENS EXTRAS ===== -->
+<div id="sec-extras" class="sec">
+  <div class="card">
+    <div class="card-title">Registrar item extra</div>
+    <div class="info-box">Itens comprados para melhorar um PC ou conjunto já existente no estoque. O custo é somado ao custo real daquele item, reduzindo o lucro na venda.</div>
+    <div class="fg fg2">
+      <input id="ex-desc" placeholder="Descrição (ex: Espelho traseiro para placa-mãe)">
+      <select id="ex-cat">
+        <option>Fan / Cooler</option><option>Espelho / Tampa</option><option>Cabo</option>
+        <option>Pasta térmica</option><option>SSD / HD adicional</option><option>RAM adicional</option>
+        <option>Iluminação RGB</option><option>Suporte / Bracket</option><option>Outro</option>
+      </select>
+      <input id="ex-custo" type="number" placeholder="Custo (R$)">
+      <input id="ex-data" type="date">
+    </div>
+    <div style="margin-bottom:8px">
+      <div style="font-size:11px;color:#888;margin-bottom:4px">Vincular a:</div>
+      <select id="ex-vinculo" style="width:100%"><option value="">Selecione um item ou conjunto...</option><optgroup label="Conjuntos em andamento"><option value="conj_conj_1776224525282">Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</option></optgroup></select>
+    </div>
+    <button class="btn btn-g" onclick="addItemExtra()">+ Adicionar item extra</button>
+  </div>
+  <div class="sr">
+    <input id="ex-busca" placeholder="Buscar..." oninput="renderExtras()">
+    <select id="ex-f-vinculo" onchange="renderExtras()" style="width:auto"><option value="">Todos os vínculos</option><option>Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</option></select>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>Descrição</th><th>Categoria</th><th>Vinculado a</th><th>Custo</th><th>Data</th><th>Ações</th></tr></thead>
+    <tbody id="ex-tbody"><tr>
+    <td><strong>3x Fãs RGB 120MM TGT</strong></td>
+    <td><span class="badge b-comp">Fan / Cooler</span></td>
+    <td><span class="badge b-conj">Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</span></td>
+    <td style="font-weight:600;color:#854f0b">R$ 30,00</td>
+    <td>25/04/2026</td>
+    <td><div class="acoes">
+      <button class="btn btn-sm btn-b" onclick="abrirEdicaoExtra(1776225031671)">Editar</button>
+      <button class="btn btn-sm btn-r" onclick="deletarExtra(1776225031671)">✕</button>
+    </div></td>
+  </tr><tr>
+    <td><strong>Espelho traseiro placa mãe</strong></td>
+    <td><span class="badge b-comp">Espelho / Tampa</span></td>
+    <td><span class="badge b-conj">Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</span></td>
+    <td style="font-weight:600;color:#854f0b">R$ 10,00</td>
+    <td>25/03/2026</td>
+    <td><div class="acoes">
+      <button class="btn btn-sm btn-b" onclick="abrirEdicaoExtra(1776224924277)">Editar</button>
+      <button class="btn btn-sm btn-r" onclick="deletarExtra(1776224924277)">✕</button>
+    </div></td>
+  </tr><tr>
+    <td><strong>Windows 11 Pro</strong></td>
+    <td><span class="badge b-comp">Outro</span></td>
+    <td><span class="badge b-conj">Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</span></td>
+    <td style="font-weight:600;color:#854f0b">R$ 59,27</td>
+    <td>25/03/2026</td>
+    <td><div class="acoes">
+      <button class="btn btn-sm btn-b" onclick="abrirEdicaoExtra(1776397212854)">Editar</button>
+      <button class="btn btn-sm btn-r" onclick="deletarExtra(1776397212854)">✕</button>
+    </div></td>
+  </tr></tbody>
+  </table></div>
+</div>
+
+<!-- ===== VENDAS ===== -->
+<div id="sec-vendas" class="sec">
+  <div class="card" id="venda-carrinho-card" style="display: none;">
+    <div class="card-title">Itens selecionados para venda</div>
+    <div id="venda-carrinho-lista" style="margin-bottom:12px"><div style="display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid #f5f5f3;font-size:12px;flex-wrap:wrap">
+      <span style="flex:1;font-weight:500">Mouse Logitech G403 Hero <span class="conj-tag">Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</span></span>
+      <span style="color:#854f0b"><span style="color:#bbb">custo no conjunto</span></span>
+      <span style="font-weight:600">R$ 100,00</span>
+      <span style="color:#888;font-weight:600">—</span>
+    </div></div>
+
+    <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Dados do comprador</div>
+    <div class="fg fg3" style="margin-bottom:10px">
+      <div>
+        <div style="font-size:11px;color:#888;margin-bottom:4px">Nome</div>
+        <input id="venda-comprador" placeholder="Nome do comprador" list="compradores-hist">
+        <datalist id="compradores-hist"><option value="Adguibson Adguimas Ferreira Da Silva"></option><option value="Nathan Johann Wortmeyer"></option><option value="Mateus Do Nascimento Dos Santos"></option></datalist>
+      </div>
+      <div>
+        <div style="font-size:11px;color:#888;margin-bottom:4px">Contato (WhatsApp / tel.)</div>
+        <input id="venda-contato" placeholder="Ex: 47 99999-9999">
+      </div>
+      <div>
+        <div style="font-size:11px;color:#888;margin-bottom:4px">Cidade</div>
+        <input id="venda-cidade" placeholder="Ex: Brusque - SC">
+      </div>
+    </div>
+
+    <div class="fg fg3" style="margin-bottom:10px">
+      <div>
+        <div style="font-size:11px;color:#888;margin-bottom:4px">Data da venda</div>
+        <input id="venda-data" type="date">
+      </div>
+      <div>
+        <div style="font-size:11px;color:#888;margin-bottom:4px">Pagamento</div>
+        <select id="venda-pagamento">
+          <option value="">Não informado</option>
+          <option>Pix</option>
+          <option>Dinheiro</option>
+          <option>Cartão de débito</option>
+          <option>Cartão de crédito</option>
+          <option>Transferência</option>
+          <option>Boleto</option>
+          <option>Parcelado</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size:11px;color:#888;margin-bottom:4px">Observação</div>
+        <input id="venda-obs" placeholder="Anotação livre sobre esta venda">
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Custos extras desta venda</div>
+    <div id="venda-gastos-lista" style="margin-bottom:6px"><div style="font-size:12px;color:#bbb;padding:2px 0">Nenhum gasto extra</div></div>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+      <select id="vg-tipo" style="width:auto;font-size:11px;padding:5px 8px">
+        <option>Combustível</option><option>Frete</option><option>Embalagem</option>
+        <option>Taxa de anúncio</option><option>Reparo</option><option>Outro</option>
+      </select>
+      <input id="vg-desc" placeholder="Descrição do gasto" style="flex:1;font-size:11px;padding:5px 8px;min-width:100px">
+      <input id="vg-valor" type="number" placeholder="R$" style="width:80px;font-size:11px;padding:5px 8px">
+      <button class="btn btn-sm btn-a" onclick="addGastoVenda()">+ Gasto</button>
+    </div>
+
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-top:10px;border-top:1px solid #f0f0ee">
+      <div style="font-size:13px;color:#888">Receita: <strong id="venda-total-sel" style="color:#1a1a18">R$ 100,00</strong></div>
+      <div style="font-size:13px;color:#888">Gastos: <strong id="venda-total-gastos" style="color:#854f0b">R$ 0,00</strong></div>
+      <div style="font-size:13px;color:#888">Lucro est.: <strong id="venda-lucro-est" style="color:#0f6e56">R$ 100,00</strong></div>
+      <div style="flex:1"></div>
+      <button class="btn btn-sm" onclick="limparSelecao()">Limpar seleção</button>
+      <button class="btn btn-g" onclick="confirmarVendaMultipla()">Confirmar venda</button>
+    </div>
+  </div>
+
+  <div class="sr">
+    <input id="vf-busca" placeholder="Buscar..." oninput="renderVendas()">
+    <select id="vf-tipo" onchange="renderVendas()" style="width:auto">
+      <option value="">Todos os tipos</option>
+      <option value="pc">PC completo</option>
+      <option value="comp">Componente</option>
+      <option value="div">Item diverso</option>
+      <option value="conj">De conjunto</option>
+    </select>
+    <select id="vf-status" onchange="renderVendas()" style="width:auto">
+      <option value="Em estoque">Em estoque</option>
+      <option value="Reservado">Reservado</option>
+      <option value="Vendido">Vendido</option>
+      <option value="">Todos</option>
+    </select>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr>
+      <th id="th-sel-all" style=""><input type="checkbox" id="sel-todos" onchange="toggleSelecionarTodos(this.checked)" title="Selecionar todos"></th>
+      <th>Descrição</th><th>Tipo</th><th>Condição</th><th>Status</th>
+      <th>Custo real</th><th>Preço de venda (R$)</th><th>Lucro</th><th id="th-acoes-venda"></th>
+    </tr></thead>
+    <tbody id="venda-tbody"><tr style="" id="vrow-1776224525286">
+      <td><input type="checkbox" onchange="toggleItem(1776224525286,this.checked)"></td>
+      <td><strong>Mouse Logitech G403 Hero</strong><span class="conj-tag">Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</span></td>
+      <td><span class="badge b-conj" title="Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )">Conj.</span></td>
+      <td>Bom</td>
+      <td><span class="badge b-est">Em estoque</span></td>
+      <td><span style="color:#bbb;font-size:11px">ver conjunto</span></td>
+      <td><input type="number" placeholder="Informe o preço" value="" style="width:130px;padding:5px 8px;font-size:12px" onchange="setPreco(1776224525286,this.value)" oninput="setPreco(1776224525286,this.value)" disabled=""></td>
+      <td><span style="font-size:11px;color:#888;font-style:italic">no conjunto</span></td>
+      <td></td>
+    </tr><tr style="" id="vrow-1776224525285">
+      <td><input type="checkbox" onchange="toggleItem(1776224525285,this.checked)"></td>
+      <td><strong>Teclado Gamer Madlions Mad68he</strong><span class="conj-tag">Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )</span></td>
+      <td><span class="badge b-conj" title="Setup Gamer Completo ( Pc / Monitor / Teclado / Mouse / Headset )">Conj.</span></td>
+      <td>Bom</td>
+      <td><span class="badge b-est">Em estoque</span></td>
+      <td><span style="color:#bbb;font-size:11px">ver conjunto</span></td>
+      <td><input type="number" placeholder="Informe o preço" value="" style="width:130px;padding:5px 8px;font-size:12px" onchange="setPreco(1776224525285,this.value)" oninput="setPreco(1776224525285,this.value)" disabled=""></td>
+      <td><span style="font-size:11px;color:#888;font-style:italic">no conjunto</span></td>
+      <td></td>
+    </tr></tbody>
+  </table></div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div id="sec-dash" class="sec">
+  <div class="sl">Esta semana</div><div class="m4" id="d-sem"><div class="met"><div class="met-l">Vendas</div><div class="met-v ">3</div></div><div class="met"><div class="met-l">Faturamento</div><div class="met-v ">R$ 3.750,00</div></div><div class="met"><div class="met-l">Lucro</div><div class="met-v g">R$ 0,00</div></div><div class="met"><div class="met-l">Resultado conj.</div><div class="met-v g">R$ 800,73</div><div class="met-sub">faturado − custo total</div></div></div>
+  <div class="sl">Este mês</div><div class="m4" id="d-mes"><div class="met"><div class="met-l">Vendas</div><div class="met-v ">3</div></div><div class="met"><div class="met-l">Faturamento</div><div class="met-v ">R$ 3.750,00</div></div><div class="met"><div class="met-l">Lucro</div><div class="met-v g">R$ 0,00</div></div><div class="met"><div class="met-l">Resultado conj.</div><div class="met-v g">R$ 800,73</div><div class="met-sub">faturado − custo total</div></div></div>
+  <div class="sl">Acumulado geral</div><div class="m4" id="d-ger"><div class="met"><div class="met-l">Receita total</div><div class="met-v ">R$ 3.750,00</div></div><div class="met"><div class="met-l">Lucro total</div><div class="met-v g">R$ 800,73</div><div class="met-sub">conj. fechados + individuais</div></div><div class="met"><div class="met-l">Resultado conj. em aberto</div><div class="met-v g">R$ 800,73</div><div class="met-sub">1 conj. incompleto(s) — faturado − custo</div></div><div class="met"><div class="met-l">Em aberto</div><div class="met-v a">1 conj. · 1 proj.</div><div class="met-sub">aguardando conclusão</div></div></div>
+  <hr class="divider">
+  <div class="two-col">
+    <div class="card"><div class="card-title">Lucro por mês (R$)</div><div class="chart-wrap"><canvas id="ch-l" role="img" aria-label="Lucro mensal"></canvas></div></div>
+    <div class="card"><div class="card-title">Itens vendidos por mês</div><div class="chart-wrap"><canvas id="ch-i" role="img" aria-label="Itens vendidos por mês"></canvas></div></div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR VENDA REALIZADA -->
+<div class="modal-bg" id="mev"><div class="modal modal-wide">
+  <h3>Editar venda</h3>
+  <div class="fg fg2">
+    <div><div style="font-size:11px;color:#888;margin-bottom:4px">Preço de venda (R$)</div><input id="mev-preco" type="number"></div>
+    <div><div style="font-size:11px;color:#888;margin-bottom:4px">Data da venda</div><input id="mev-data" type="date"></div>
+    <div><div style="font-size:11px;color:#888;margin-bottom:4px">Comprador</div><input id="mev-comprador" placeholder="Nome do comprador"></div>
+    <div><div style="font-size:11px;color:#888;margin-bottom:4px">Contato</div><input id="mev-contato" placeholder="WhatsApp / tel."></div>
+    <div><div style="font-size:11px;color:#888;margin-bottom:4px">Cidade</div><input id="mev-cidade" placeholder="Ex: Brusque - SC"></div>
+    <div><div style="font-size:11px;color:#888;margin-bottom:4px">Pagamento</div>
+      <select id="mev-pagamento">
+        <option value="">Não informado</option>
+        <option>Pix</option><option>Dinheiro</option><option>Cartão de débito</option>
+        <option>Cartão de crédito</option><option>Transferência</option><option>Boleto</option><option>Parcelado</option>
+      </select>
+    </div>
+    <div style="grid-column:1/-1"><div style="font-size:11px;color:#888;margin-bottom:4px">Observação</div><input id="mev-obs" placeholder="Anotação livre"></div>
+  </div>
+  <div class="modal-btns"><button class="btn btn-sm" onclick="closeMEV()">Cancelar</button><button class="btn btn-sm btn-g" onclick="salvarEdicaoVenda()">Salvar</button></div>
+</div></div>
+
+<!-- MODAL EDITAR ITEM EXTRA -->
+<div class="modal-bg" id="meex"><div class="modal">
+  <h3>Editar item extra</h3>
+  <input id="meex-desc" placeholder="Descrição">
+  <select id="meex-cat">
+    <option>Fan / Cooler</option><option>Espelho / Tampa</option><option>Cabo</option>
+    <option>Pasta térmica</option><option>SSD / HD adicional</option><option>RAM adicional</option>
+    <option>Iluminação RGB</option><option>Suporte / Bracket</option><option>Outro</option>
+  </select>
+  <input id="meex-custo" type="number" placeholder="Custo (R$)">
+  <input id="meex-data" type="date">
+  <div class="modal-btns"><button class="btn btn-sm" onclick="closeMEEX()">Cancelar</button><button class="btn btn-sm btn-g" onclick="salvarEdicaoExtra()">Salvar</button></div>
+</div></div>
+
+<!-- MODAL VENDA -->
+<div class="modal-bg" id="mv"><div class="modal">
+  <h3 id="mv-t">Registrar venda</h3>
+  <input id="mv-c" placeholder="Comprador (opcional)">
+  <input id="mv-p" type="number" placeholder="Preço de venda (R$)">
+  <input id="mv-d" type="date">
+  <div class="modal-btns"><button class="btn btn-sm" onclick="closeMV()">Cancelar</button><button class="btn btn-sm btn-g" onclick="confirmarVenda()">Confirmar venda</button></div>
+</div></div>
+
+<!-- MODAL FICHA -->
+<div class="modal-bg" id="mf"><div class="modal modal-wide">
+  <h3 id="mf-t">Ficha técnica</h3>
+  <div id="mf-b"></div>
+  <div class="modal-btns" style="margin-top:12px"><button class="btn btn-sm" onclick="closeMF()">Fechar</button></div>
+</div></div>
+
+<!-- MODAL EDITAR ITEM ESTOQUE -->
+<div class="modal-bg" id="me"><div class="modal modal-wide">
+  <h3 id="me-t">Editar item</h3>
+  <div id="me-body"></div>
+  <div class="modal-btns"><button class="btn btn-sm" onclick="closeME()">Cancelar</button><button class="btn btn-sm btn-g" onclick="salvarEdicao()">Salvar</button></div>
+</div></div>
+
+<!-- MODAL EDITAR GASTO EXTRA -->
+<div class="modal-bg" id="mege"><div class="modal">
+  <h3>Editar gasto extra</h3>
+  <select id="mege-tipo"><option>Combustível</option><option>Frete</option><option>Reparo</option><option>Taxa de anúncio</option><option>Embalagem</option><option>Outro</option></select>
+  <input id="mege-desc" placeholder="Descrição">
+  <input id="mege-valor" type="number" placeholder="Valor (R$)">
+  <div class="modal-btns"><button class="btn btn-sm" onclick="closeMEGE()">Cancelar</button><button class="btn btn-sm btn-g" onclick="salvarEdicaoGasto()">Salvar</button></div>
+</div></div>
+
+<!-- MODAL EDITAR PEÇA PROJETO -->
+<div class="modal-bg" id="mepp"><div class="modal">
+  <h3>Editar peça</h3>
+  <select id="mepp-cat"><option>CPU</option><option>GPU</option><option>RAM</option><option>Armazenamento</option><option>Placa-mãe</option><option>Fonte</option><option>Cooler</option><option>Fan</option><option>Gabinete</option><option>Outro</option></select>
+  <input id="mepp-desc" placeholder="Descrição">
+  <input id="mepp-custo" type="number" placeholder="Custo (R$)">
+  <div class="modal-btns"><button class="btn btn-sm" onclick="closeMEPP()">Cancelar</button><button class="btn btn-sm btn-g" onclick="salvarEdicaoPeca()">Salvar</button></div>
+</div></div>
+
+<!-- MODAL FINALIZAR PROJETO -->
+<div class="modal-bg" id="mfp"><div class="modal modal-wide">
+  <h3 id="mfp-t">Finalizar projeto</h3>
+  <div class="warn-box">Revise as specs. O projeto será encerrado e o PC entrará no estoque.</div>
+  <div class="fg fg2">
+    <div><div style="font-size:11px;color:#888;margin-bottom:4px">Custo total acumulado</div><div id="mfp-custo" style="font-size:15px;font-weight:600;color:#0f6e56;padding:7px 10px;background:#e1f5ee;border-radius:8px"></div></div>
+    <input id="mfp-cond" placeholder="Condição (Ótimo / Bom / Com defeito)">
+  </div>
+  <div class="spec-grid">
+    <div class="spec-group"><div class="spec-group-label">CPU</div><input id="mfp-cpu" placeholder="Ex: Ryzen 5 5600X"></div>
+    <div class="spec-group"><div class="spec-group-label">GPU</div><input id="mfp-gpu" placeholder="Ex: GTX 1650 Super 4GB"></div>
+    <div class="spec-group"><div class="spec-group-label">RAM</div><input id="mfp-ram" placeholder="Ex: 16GB DDR4 3200MHz"></div>
+    <div class="spec-group"><div class="spec-group-label">Armazenamento</div><input id="mfp-sto" placeholder="Ex: SSD 480GB"></div>
+    <div class="spec-group"><div class="spec-group-label">Placa-mãe</div><input id="mfp-mb" placeholder="Ex: B450M Aorus Elite"></div>
+    <div class="spec-group"><div class="spec-group-label">Fonte</div><input id="mfp-psu" placeholder="Ex: Corsair 550W"></div>
+    <div class="spec-group"><div class="spec-group-label">Cooler / Fans</div><input id="mfp-cool" placeholder="Cooler"><input id="mfp-fans" placeholder="Fans"></div>
+    <div class="spec-group"><div class="spec-group-label">Gabinete</div><input id="mfp-gab" placeholder="Ex: Aerocool Cylon"></div>
+  </div>
+  <div class="modal-btns"><button class="btn btn-sm" onclick="closeMFP()">Cancelar</button><button class="btn btn-sm btn-g" onclick="finalizarProjeto()">Finalizar → entrar no estoque</button></div>
+</div></div>
+
+<script>
+const SHEETS_URL='https://script.google.com/macros/s/AKfycbx4MrjmLIg5Umdb9q3_eGgFYzdMRV-q8GoSJU4tSPe3RIQ9nh0OVY0tau-waqq8JFvg/exec';
+const KEY_EST='estoque_v9', KEY_CONJ='conjuntos_v9', KEY_PROJ='projetos_v9', KEY_EXT='extras_v9';
+let items=[], conjuntos=[], projetos=[], extras=[], charts={};
+let vendId=null, editId=null, editGeConjId=null, editGeId=null;
+let editProjId=null, editPecaId=null, projFinId=null, tipoForm='pc';
+let conjItensForm=[{desc:'',cat:'PC completo',specs:{}},{desc:'',cat:'Monitor',specs:{}}];
+let _saveTimer=null;
+
+// ===== STATUS DE SYNC =====
+function setSyncStatus(status, msg){
+  const el=document.getElementById('sync-status');if(!el)return;
+  const cfg={
+    ok:     {bg:'#e1f5ee',color:'#0f6e56',icon:'☁️'},
+    saving: {bg:'#faeeda',color:'#854f0b',icon:'⏳'},
+    error:  {bg:'#fcebeb',color:'#a32d2d',icon:'⚠️'},
+    loading:{bg:'#e6f1fb',color:'#185fa5',icon:'🔄'},
+  }[status]||{bg:'#f5f5f3',color:'#888',icon:'•'};
+  el.style.cssText=`font-size:11px;padding:3px 10px;border-radius:20px;background:${cfg.bg};color:${cfg.color};font-weight:600`;
+  el.textContent=cfg.icon+' '+msg;
+}
+
+// ===== JSONP =====
+function jsonp(url, callback){
+  const cbName='_jsonp_'+Date.now();
+  const script=document.createElement('script');
+  const timeout=setTimeout(()=>{
+    delete window[cbName];
+    script.remove();
+    callback(null);
+  }, 15000);
+  window[cbName]=function(data){
+    clearTimeout(timeout);
+    delete window[cbName];
+    script.remove();
+    callback(data);
+  };
+  script.src=url+(url.includes('?')?'&':'?')+'callback='+cbName;
+  document.head.appendChild(script);
+}
+
+// ===== LOAD DO SHEETS =====
+function load(){
+  setSyncStatus('loading','Carregando...');
+  // cache local imediato
+  try{items=JSON.parse(localStorage.getItem(KEY_EST)||'[]')}catch(e){items=[]}
+  try{conjuntos=JSON.parse(localStorage.getItem(KEY_CONJ)||'[]')}catch(e){conjuntos=[]}
+  try{projetos=JSON.parse(localStorage.getItem(KEY_PROJ)||'[]')}catch(e){projetos=[]}
+  try{extras=JSON.parse(localStorage.getItem(KEY_EXT)||'[]')}catch(e){extras=[]}
+  render();renderConjItensForm();atualizarInfoBackup();
+
+  // busca do Sheets via JSONP
+  jsonp(SHEETS_URL+'?action=load', function(json){
+    if(json && json.ok && json.data){
+      const d=json.data;
+      items=d.items||[];
+      conjuntos=d.conjuntos||[];
+      projetos=d.projetos||[];
+      extras=d.extras||[];
+      localStorage.setItem(KEY_EST,JSON.stringify(items));
+      localStorage.setItem(KEY_CONJ,JSON.stringify(conjuntos));
+      localStorage.setItem(KEY_PROJ,JSON.stringify(projetos));
+      localStorage.setItem(KEY_EXT,JSON.stringify(extras));
+      render();renderConjItensForm();atualizarInfoBackup();
+      setSyncStatus('ok','Sincronizado');
+    } else {
+      setSyncStatus('error','Erro ao carregar — usando cache local');
+    }
+  });
+}
+
+// ===== SAVE NO SHEETS (debounced) =====
+function save(){
+  // salva local imediatamente
+  try{
+    localStorage.setItem(KEY_EST,JSON.stringify(items));
+    localStorage.setItem(KEY_CONJ,JSON.stringify(conjuntos));
+    localStorage.setItem(KEY_PROJ,JSON.stringify(projetos));
+    localStorage.setItem(KEY_EXT,JSON.stringify(extras));
+  }catch(e){}
+  clearTimeout(_saveTimer);
+  setSyncStatus('saving','Salvando...');
+  _saveTimer=setTimeout(()=>{
+    fetch(SHEETS_URL, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'save',data:{items,conjuntos,projetos,extras}})
+    })
+    .then(()=>setSyncStatus('ok','Salvo na nuvem ✓'))
+    .catch(()=>setSyncStatus('error','Erro ao salvar na nuvem'));
+  }, 800);
+}
+
+const today=()=>new Date().toISOString().split('T')[0];
+const fmt=n=>'R$ '+Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtD=d=>{if(!d)return'—';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`};
+const gv=id=>document.getElementById(id)?.value.trim()||'';
+const cv=id=>{const el=document.getElementById(id);if(el)el.value=''};
+
+function goTab(t){
+  const tabs=['estoque','conjuntos','projetos','extras','vendas','dash'];
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===t));
+  tabs.forEach(id=>document.getElementById('sec-'+id).classList.toggle('active',id===t));
+  if(t==='dash')renderDash();
+  if(t==='conjuntos'){renderConjItensForm();renderConjuntos();}
+  if(t==='projetos')renderProjetos();
+  if(t==='extras')renderExtras();
+  if(t==='vendas'){renderVendas();const vd=document.getElementById('venda-data');if(vd&&!vd.value)vd.value=new Date().toISOString().split('T')[0];}
+}
+function setTipo(t){
+  tipoForm=t;
+  const btns=document.querySelectorAll('.tt');
+  const tipos=['pc','comp','div'];
+  btns.forEach((b,i)=>b.classList.toggle('active',tipos[i]===t));
+  ['pc','comp','div'].forEach(id=>document.getElementById('tf-'+id).classList.toggle('active',id===t));
+}
+
+// ===== ESTOQUE INDIVIDUAL =====
+function addItemEstoque(){
+  const d=today();
+  if(tipoForm==='pc'){
+    const nome=gv('p-nome');if(!nome){alert('Informe o nome do PC.');return}
+    items.unshift({id:Date.now(),tipo:'pc',desc:nome,cond:gv('p-cond')||'—',custo:parseFloat(gv('p-custo'))||0,dcomp:gv('p-dcomp')||d,status:'Em estoque',venda:null,dvenda:'',comprador:'',specs:{cpu:gv('p-cpu'),gpu:gv('p-gpu'),ram:gv('p-ram'),sto:gv('p-sto'),mb:gv('p-mb'),psu:gv('p-psu'),cool:gv('p-cool'),fans:gv('p-fans'),gab:gv('p-gab')}});
+    ['p-nome','p-cond','p-custo','p-dcomp','p-cpu','p-gpu','p-ram','p-sto','p-mb','p-psu','p-cool','p-fans','p-gab'].forEach(cv);
+  } else if(tipoForm==='comp') {
+    const desc=gv('c-desc');if(!desc){alert('Informe a descrição.');return}
+    items.unshift({id:Date.now(),tipo:'comp',cat:document.getElementById('c-cat').value,desc,cond:gv('c-cond')||'—',custo:parseFloat(gv('c-custo'))||0,dcomp:gv('c-dcomp')||d,status:'Em estoque',venda:null,dvenda:'',comprador:'',specs:null});
+    ['c-desc','c-cond','c-custo','c-dcomp'].forEach(cv);
+  } else {
+    const desc=gv('d-desc');if(!desc){alert('Informe a descrição.');return}
+    items.unshift({id:Date.now(),tipo:'div',cat:gv('d-cat')||'Diverso',desc,cond:gv('d-cond')||'—',custo:parseFloat(gv('d-custo'))||0,dcomp:gv('d-dcomp')||d,status:'Em estoque',venda:null,dvenda:'',comprador:'',obs:gv('d-obs'),specs:null});
+    ['d-desc','d-cat','d-cond','d-custo','d-dcomp','d-obs'].forEach(cv);
+  }
+  save();render();
+}
+
+// ===== VENDA =====
+function abrirVenda(id){
+  vendId=id;
+  const it=items.find(i=>i.id===id);
+  document.getElementById('mv-t').textContent='Vender — '+it.desc;
+  ['mv-c','mv-p','mv-d'].forEach(cv);
+  document.getElementById('mv').classList.add('open');
+}
+function closeMV(){document.getElementById('mv').classList.remove('open');vendId=null}
+function confirmarVenda(){
+  const p=parseFloat(gv('mv-p'))||0;if(!p){alert('Informe o preço de venda.');return}
+  const it=items.find(i=>i.id===vendId);
+  it.status='Vendido';it.venda=p;it.comprador=gv('mv-c')||'—';it.dvenda=gv('mv-d')||today();
+  save();closeMV();render();
+  // atualizar painel do conjunto se for item vinculado
+  if(it.conjId) renderConjuntos();
+}
+
+// ===== FICHA =====
+function abrirFicha(id){
+  const it=items.find(i=>i.id===id);
+  document.getElementById('mf-t').textContent=it.desc;
+  const s=it.specs||{};
+  const rows=[
+    ['CPU',s.cpu],['GPU',s.gpu],['RAM',s.ram],['Armazenamento',s.sto],
+    ['Placa-mãe',s.mb],['Fonte',s.psu],['Cooler',s.cool],['Fans',s.fans],['Gabinete',s.gab],
+    ['Descrição extra',s.descExtra],['Condição',it.cond],
+    ['Custo de compra',it.custo?fmt(it.custo):null],
+    ['Conjunto de origem',it.conjNome],['Projeto de origem',it.origemProjeto],
+    ['Status',it.status],['Data de compra',fmtD(it.dcomp)],
+    ...(it.status==='Vendido'?[['Preço de venda',fmt(it.venda)],['Lucro',fmt((it.venda||0)-it.custo)],['Comprador',it.comprador],['Contato',it.contato||null],['Cidade',it.cidade||null],['Pagamento',it.pagamento||null],['Data de venda',fmtD(it.dvenda)],['Observação',it.obs||null],['Gastos da venda',it.gastosVenda&&it.gastosVenda.length?it.gastosVenda.map(g=>g.desc+' '+fmt(g.valor)).join(' · '):null]]:[])
+  ].filter(r=>r[1]);
+  document.getElementById('mf-b').innerHTML=`<div class="ficha-rows">${rows.map(([k,v])=>`<div class="fr"><span class="fk">${k}</span><span class="fv">${v}</span></div>`).join('')}</div>`;
+  document.getElementById('mf').classList.add('open');
+}
+function closeMF(){document.getElementById('mf').classList.remove('open')}
+
+// ===== EDIÇÃO ESTOQUE =====
+function abrirEdicao(id){
+  editId=id;
+  const it=items.find(i=>i.id===id);
+  const s=it.specs||{};
+  const cats=['CPU','GPU','RAM','Armazenamento','Placa-mãe','Fonte','Cooler','Gabinete','Monitor','Teclado','Mouse','Headset','Periférico','Outro'];
+  document.getElementById('me-t').textContent='Editar — '+it.desc;
+  if(it.tipo==='pc'){
+    document.getElementById('me-body').innerHTML=`
+    <div class="fg fg2">
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Nome</div><input id="ed-nome" value="${it.desc}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Condição</div><input id="ed-cond" value="${it.cond==='—'?'':it.cond}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Custo (R$)</div><input id="ed-custo" type="number" value="${it.custo}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Data de compra</div><input id="ed-dcomp" type="date" value="${it.dcomp||''}"/></div>
+    </div>
+    <div class="spec-grid">
+      <div class="spec-group"><div class="spec-group-label">CPU</div><input id="ed-cpu" value="${s.cpu||''}"/></div>
+      <div class="spec-group"><div class="spec-group-label">GPU</div><input id="ed-gpu" value="${s.gpu||''}"/></div>
+      <div class="spec-group"><div class="spec-group-label">RAM</div><input id="ed-ram" value="${s.ram||''}"/></div>
+      <div class="spec-group"><div class="spec-group-label">Armazenamento</div><input id="ed-sto" value="${s.sto||''}"/></div>
+      <div class="spec-group"><div class="spec-group-label">Placa-mãe</div><input id="ed-mb" value="${s.mb||''}"/></div>
+      <div class="spec-group"><div class="spec-group-label">Fonte</div><input id="ed-psu" value="${s.psu||''}"/></div>
+      <div class="spec-group"><div class="spec-group-label">Cooler / Fans</div><input id="ed-cool" value="${s.cool||''}"/><input id="ed-fans" value="${s.fans||''}"/></div>
+      <div class="spec-group"><div class="spec-group-label">Gabinete</div><input id="ed-gab" value="${s.gab||''}"/></div>
+    </div>`;
+  } else if(it.tipo==='div'){
+    document.getElementById('me-body').innerHTML=`
+    <div class="fg fg2">
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Descrição</div><input id="ed-nome" value="${it.desc}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Categoria</div><input id="ed-div-cat" value="${it.cat||''}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Condição</div><input id="ed-cond" value="${it.cond==='—'?'':it.cond}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Custo (R$)</div><input id="ed-custo" type="number" value="${it.custo}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Data de compra</div><input id="ed-dcomp" type="date" value="${it.dcomp||''}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Observação</div><input id="ed-div-obs" value="${it.obs||''}"/></div>
+    </div>`;
+  } else {
+    document.getElementById('me-body').innerHTML=`
+    <div class="fg fg2">
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Descrição</div><input id="ed-nome" value="${it.desc}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Categoria</div><select id="ed-cat">${cats.map(c=>`<option${it.cat===c?' selected':''}>${c}</option>`).join('')}</select></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Condição</div><input id="ed-cond" value="${it.cond==='—'?'':it.cond}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Custo (R$)</div><input id="ed-custo" type="number" value="${it.custo}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Data de compra</div><input id="ed-dcomp" type="date" value="${it.dcomp||''}"/></div>
+      <div><div style="font-size:11px;color:#888;margin-bottom:4px">Descrição extra</div><input id="ed-descExtra" value="${s.descExtra||''}"/></div>
+    </div>`;
+  }
+  document.getElementById('me').classList.add('open');
+}
+function closeME(){document.getElementById('me').classList.remove('open');editId=null}
+function salvarEdicao(){
+  const it=items.find(i=>i.id===editId);
+  it.desc=gv('ed-nome')||it.desc;
+  it.cond=gv('ed-cond')||'—';
+  it.custo=parseFloat(document.getElementById('ed-custo')?.value)||it.custo;
+  it.dcomp=gv('ed-dcomp')||it.dcomp;
+  if(it.tipo==='pc'){
+    it.specs={cpu:gv('ed-cpu'),gpu:gv('ed-gpu'),ram:gv('ed-ram'),sto:gv('ed-sto'),mb:gv('ed-mb'),psu:gv('ed-psu'),cool:gv('ed-cool'),fans:gv('ed-fans'),gab:gv('ed-gab')};
+  } else if(it.tipo==='div'){
+    it.cat=gv('ed-div-cat')||it.cat;
+    it.obs=gv('ed-div-obs');
+  } else {
+    it.cat=document.getElementById('ed-cat')?.value||it.cat;
+    it.specs={...(it.specs||{}),descExtra:gv('ed-descExtra')};
+  }
+  save();closeME();render();
+  if(it.conjId)renderConjuntos();
+}
+
+
+function reservar(id){const it=items.find(i=>i.id===id);it.status=it.status==='Reservado'?'Em estoque':'Reservado';save();render()}
+function deletar(id){
+  if(!confirm('Remover este item permanentemente?'))return;
+  const it=items.find(i=>i.id===id);
+  items=items.filter(i=>i.id!==id);
+  save();render();
+  if(it&&it.conjId)renderConjuntos();
+}
+function estornarVenda(id){
+  if(!confirm('Estornar esta venda? O item voltará para o estoque.'))return;
+  const it=items.find(i=>i.id===id);if(!it)return;
+  it.status='Em estoque';
+  it.venda=null;
+  it.dvenda='';
+  it.comprador='';
+  it.contato='';
+  it.cidade='';
+  it.pagamento='';
+  it.obs='';
+  it.gastosVenda=[];
+  save();render();renderVendas();
+  if(it.conjId)renderConjuntos();
+}
+
+function renderResumoEstoque(){
+  const el=document.getElementById('resumo-estoque');if(!el)return;
+  const emEstoque=items.filter(i=>i.status!=='Vendido');
+  // PCs individuais (sem conjId, tipo pc)
+  const pcs=emEstoque.filter(i=>i.tipo==='pc'&&!i.conjId);
+  const custoPCs=pcs.reduce((a,i)=>a+i.custo,0);
+  // Componentes individuais (sem conjId, tipo comp)
+  const comps=emEstoque.filter(i=>i.tipo==='comp'&&!i.conjId);
+  const custoComps=comps.reduce((a,i)=>a+i.custo,0);
+  // Itens diversos
+  const divs=emEstoque.filter(i=>i.tipo==='div');
+  const custoDivs=divs.reduce((a,i)=>a+i.custo,0);
+  // Conjuntos ativos (custo total do conjunto se ainda tem item em estoque)
+  const conjAtivos=conjuntos.filter(c=>items.some(i=>i.conjId===c.id&&i.status!=='Vendido'));
+  const custoConjs=conjAtivos.reduce((a,c)=>a+c.custoTotal+(c.gastos||[]).reduce((b,g)=>b+g.valor,0),0);
+  const total=custoPCs+custoComps+custoDivs+custoConjs;
+  const partes=[
+    {label:'PCs',n:pcs.length,v:custoPCs,cor:'#185fa5',bg:'#e6f1fb'},
+    {label:'Componentes',n:comps.length,v:custoComps,cor:'#534ab7',bg:'#eeedfe'},
+    {label:'Conjuntos',n:conjAtivos.length,v:custoConjs,cor:'#993c1d',bg:'#faece7'},
+    {label:'Itens diversos',n:divs.length,v:custoDivs,cor:'#6a5acd',bg:'#f0eef8'},
+  ].filter(p=>p.n>0||p.v>0);
+  el.innerHTML=`<div style="background:#fff;border:1px solid #e5e5e2;border-radius:12px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+    <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;flex-shrink:0">Valor em estoque</div>
+    <div style="font-size:17px;font-weight:700;color:#1a1a18;flex-shrink:0">${fmt(total)}</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:4px">
+      ${partes.map(p=>`<span style="font-size:11px;background:${p.bg};color:${p.cor};padding:3px 9px;border-radius:20px;font-weight:600">${p.label}: ${fmt(p.v)} <span style="opacity:.7">(${p.n})</span></span>`).join('')}
+    </div>
+  </div>`;
+}
+
+function render(){
+  renderResumoEstoque();
+  const q=(gv('busca')||'').toLowerCase();
+  const ft=document.getElementById('f-tipo').value;
+  const fs=document.getElementById('f-status').value;
+  const list=items.filter(i=>{
+    const matchQ=i.desc.toLowerCase().includes(q)||(i.specs&&Object.values(i.specs).join(' ').toLowerCase().includes(q))||((i.conjNome||'').toLowerCase().includes(q));
+    const matchT=!ft||(ft==='conj'?!!i.conjId:i.tipo===ft);
+    return matchQ&&matchT&&(!fs||i.status===fs);
+  });
+  const tb=document.getElementById('tbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="11" class="empty">Nenhum item encontrado</td></tr>`;return}
+  tb.innerHTML=list.map(it=>{
+    const lv=it.venda!=null?it.venda-(it.custo+custoExtrasItem(it.id)):null;
+    const lc=lv!=null?(lv>=0?'#0f6e56':'#a32d2d'):'#bbb';
+    const sb=it.status==='Em estoque'?'b-est':it.status==='Reservado'?'b-res':'b-ven';
+    const tipoBadge=it.conjId?`<span class="badge b-conj" title="Conjunto: ${it.conjNome||''}">Conj.</span>`:it.tipo==='pc'?`<span class="badge b-pc">PC</span>`:it.tipo==='div'?`<span class="badge b-div">${it.cat||'Diverso'}</span>`:`<span class="badge b-comp">${it.cat}</span>`;
+    const conjTag=it.conjNome?`<span class="conj-tag">${it.conjNome}</span>`:'';
+    const fb=(it.tipo==='pc'||it.origemProjeto||it.conjId)?`<button class="btn btn-sm btn-b" onclick="abrirFicha(${it.id})">Ficha</button>`:'';
+    const ac=it.status!=='Vendido'
+      ?`${fb}<button class="btn btn-sm btn-b" onclick="abrirEdicao(${it.id})">Editar</button><button class="btn btn-sm" onclick="reservar(${it.id})">${it.status==='Reservado'?'↩ Liberar':'⊙ Reservar'}</button><button class="btn btn-sm btn-r" onclick="deletar(${it.id})">✕ Excluir</button>`
+      :`${fb}<button class="btn btn-sm btn-b" onclick="abrirEdicao(${it.id})">Editar</button><button class="btn btn-sm btn-a" onclick="abrirEdicaoVenda(${it.id})">Editar venda</button><button class="btn btn-sm" onclick="estornarVenda(${it.id})">↩ Estornar</button><button class="btn btn-sm btn-r" onclick="deletar(${it.id})">✕ Excluir</button>`;
+    const custoLabel=it.conjId?`<span title="Custo individual não definido — ver conjunto">—</span>`:fmt(it.custo);
+    const lucroLabel=it.conjId?`<span style="color:#aaa;font-size:11px" title="Lucro calculado no conjunto">ver conjunto</span>`:(lv!=null?(lv>=0?'+':'')+fmt(lv):'—');
+    return`<tr>
+      <td><strong>${it.desc}</strong>${conjTag}</td>
+      <td>${tipoBadge}</td><td>${it.cond}</td>
+      <td><span class="badge ${sb}">${it.status}</span></td>
+      <td>${custoLabel}</td>
+      <td>${it.venda!=null?fmt(it.venda):'—'}</td>
+      <td style="color:${it.conjId?'#aaa':lc};font-weight:600">${lucroLabel}</td>
+      <td>${fmtD(it.dcomp)}</td><td>${fmtD(it.dvenda)}</td>
+      <td>${it.comprador||'—'}</td>
+      <td><div class="acoes">${ac}</div></td>
+    </tr>`
+  }).join('');
+}
+
+// ===== CONJUNTOS =====
+function sgHTML(idx,field,label,ph,val){
+  return`<div class="spec-group"><div class="spec-group-label">${label}</div><input value="${val||''}" placeholder="${ph}" oninput="conjItensForm[${idx}].specs['${field}']=this.value"/></div>`;
+}
+function renderConjItensForm(){
+  const cats=['PC completo','Monitor','Teclado','Mouse','Headset','Controle','Cadeira','Mesa','Periférico','Outro'];
+  document.getElementById('cj-itens-form').innerHTML=conjItensForm.map((it,idx)=>{
+    const s=it.specs||{};
+    const isPC=it.cat==='PC completo';
+    return`<div style="border:1px solid #e5e5e2;border-radius:10px;padding:.75rem 1rem;margin-bottom:10px">
+      <div style="display:grid;grid-template-columns:2fr 1fr auto;gap:6px;margin-bottom:8px;align-items:center">
+        <input value="${it.desc}" placeholder="Nome do item (ex: PC Ryzen 5 5600)" oninput="conjItensForm[${idx}].desc=this.value"/>
+        <select onchange="conjItensForm[${idx}].cat=this.value;renderConjItensForm()">${cats.map(c=>`<option${it.cat===c?' selected':''}>${c}</option>`).join('')}</select>
+        <button class="btn btn-sm btn-r" onclick="conjItensForm.splice(${idx},1);renderConjItensForm()">✕</button>
+      </div>
+      ${isPC?`<div class="spec-grid">
+        ${sgHTML(idx,'cpu','CPU','Ex: Ryzen 5 5600X',s.cpu)}
+        ${sgHTML(idx,'gpu','GPU','Ex: GTX 1650 Super 4GB',s.gpu)}
+        ${sgHTML(idx,'ram','RAM','Ex: 16GB DDR4 3200MHz',s.ram)}
+        ${sgHTML(idx,'sto','Armazenamento','Ex: SSD 480GB + HD 1TB',s.sto)}
+        ${sgHTML(idx,'mb','Placa-mãe','Ex: B450M Aorus Elite',s.mb)}
+        ${sgHTML(idx,'psu','Fonte','Ex: Corsair 550W 80+ Bronze',s.psu)}
+        <div class="spec-group"><div class="spec-group-label">Cooler / Fans</div>
+          <input value="${s.cool||''}" placeholder="Cooler" oninput="conjItensForm[${idx}].specs['cool']=this.value" style="margin-bottom:4px"/>
+          <input value="${s.fans||''}" placeholder="Fans (ex: 3x 120mm RGB)" oninput="conjItensForm[${idx}].specs['fans']=this.value"/>
+        </div>
+        ${sgHTML(idx,'gab','Gabinete','Ex: Aerocool Cylon RGB',s.gab)}
+      </div>`:`<div class="fg fg2" style="margin-top:4px">
+        <input value="${s.descExtra||''}" placeholder="Descrição adicional (modelo, cor, etc.)" oninput="conjItensForm[${idx}].specs['descExtra']=this.value"/>
+        <input value="${s.cond||''}" placeholder="Condição do item" oninput="conjItensForm[${idx}].specs['cond']=this.value"/>
+      </div>`}
+    </div>`
+  }).join('');
+}
+function addConjItemForm(){conjItensForm.push({desc:'',cat:'PC completo',specs:{}});renderConjItensForm()}
+
+function criarConjunto(){
+  const nome=gv('cj-nome');if(!nome){alert('Informe o nome do conjunto.');return}
+  const itensValidos=conjItensForm.filter(i=>i.desc.trim());
+  if(!itensValidos.length){alert('Adicione pelo menos um item.');return}
+  const conjId='conj_'+Date.now();
+  const dcomp=gv('cj-dcomp')||today();
+  const cond=gv('cj-cond')||'—';
+  // criar registro do conjunto (só para controle de gastos e custo total)
+  const conj={
+    id:conjId, nome,
+    dcomp, custoTotal:parseFloat(gv('cj-total'))||0,
+    cond, gastos:[],
+    itemIds:[] // ids dos itens no estoque
+  };
+  // inserir itens direto no estoque com referência ao conjunto
+  itensValidos.forEach((it,i)=>{
+    const itemId=Date.now()+i+1;
+    conj.itemIds.push(itemId);
+    const isPC=it.cat==='PC completo';
+    items.unshift({
+      id:itemId,
+      tipo:isPC?'pc':'comp',
+      cat:isPC?undefined:it.cat,
+      desc:it.desc,
+      cond,
+      custo:0, // custo individual não definido — ver conjunto
+      dcomp,
+      status:'Em estoque',
+      venda:null, dvenda:'', comprador:'',
+      conjId, conjNome:nome,
+      specs:it.specs||{}
+    });
+  });
+  conjuntos.unshift(conj);
+  ['cj-nome','cj-total','cj-cond','cj-dcomp'].forEach(cv);
+  conjItensForm=[{desc:'',cat:'PC completo',specs:{}},{desc:'',cat:'Monitor',specs:{}}];
+  renderConjItensForm();save();render();renderConjuntos();
+  alert(`Conjunto "${nome}" criado! ${itensValidos.length} item(ns) adicionado(s) ao estoque.`);
+}
+
+function addGastoConj(conjId){
+  const conj=conjuntos.find(c=>c.id===conjId);if(!conj)return;
+  const dEl=document.getElementById('gd-desc-'+conjId);
+  const vEl=document.getElementById('gd-valor-'+conjId);
+  const tEl=document.getElementById('gd-tipo-'+conjId);
+  const desc=dEl.value.trim();if(!desc){alert('Descreva o gasto.');return}
+  const valor=parseFloat(vEl.value)||0;if(!valor){alert('Informe o valor.');return}
+  conj.gastos.push({id:Date.now(),desc,valor,tipo:tEl.value,data:today()});
+  dEl.value='';vEl.value='';
+  save();renderConjuntos();
+}
+function removeGasto(conjId,gastoId){
+  const conj=conjuntos.find(c=>c.id===conjId);if(!conj)return;
+  conj.gastos=conj.gastos.filter(g=>g.id!==gastoId);
+  save();renderConjuntos();
+}
+let editGeConjId2=null,editGeId2=null;
+function abrirEdicaoGasto(conjId,gastoId){
+  editGeConjId2=conjId;editGeId2=gastoId;
+  const conj=conjuntos.find(c=>c.id===conjId);
+  const g=conj.gastos.find(g=>g.id===gastoId);
+  document.getElementById('mege-tipo').value=g.tipo||'Outro';
+  document.getElementById('mege-desc').value=g.desc;
+  document.getElementById('mege-valor').value=g.valor;
+  document.getElementById('mege').classList.add('open');
+}
+function closeMEGE(){document.getElementById('mege').classList.remove('open')}
+function salvarEdicaoGasto(){
+  const conj=conjuntos.find(c=>c.id===editGeConjId2);
+  const g=conj.gastos.find(g=>g.id===editGeId2);
+  g.tipo=document.getElementById('mege-tipo').value;
+  g.desc=gv('mege-desc')||g.desc;
+  g.valor=parseFloat(document.getElementById('mege-valor').value)||g.valor;
+  save();closeMEGE();renderConjuntos();
+}
+function deletarConj(conjId){
+  if(!confirm('Excluir este conjunto? Os itens no estoque NÃO serão removidos.'))return;
+  conjuntos=conjuntos.filter(c=>c.id!==conjId);
+  save();renderConjuntos();
+}
+
+function renderConjuntos(){
+  const lista=document.getElementById('conj-lista');
+  if(!conjuntos.length){lista.innerHTML=`<div class="card"><div class="empty">Nenhum conjunto criado ainda.</div></div>`;return}
+  lista.innerHTML=conjuntos.map(conj=>{
+    const conjItems=items.filter(i=>i.conjId===conj.id);
+    const totalGastos=conj.gastos.reduce((a,g)=>a+g.valor,0);
+    const totalExtras=custoExtrasConj(conj.id);
+    const custoReal=conj.custoTotal+totalGastos+totalExtras;
+    const vendidos=conjItems.filter(i=>i.status==='Vendido');
+    const totalVendido=vendidos.reduce((a,i)=>a+(i.venda||0),0);
+    const qtdVend=vendidos.length;
+    const qtdTotal=conjItems.length;
+    const tudo=qtdVend===qtdTotal&&qtdTotal>0;
+    const lucroParcial=totalVendido-custoReal; // sempre calculado
+    const lucro=tudo?lucroParcial:null;
+    const pct=qtdTotal?Math.round((qtdVend/qtdTotal)*100):0;
+    return`<div class="conj-card">
+      <div class="conj-header">
+        <div>
+          <div style="font-weight:600;font-size:14px">${conj.nome}</div>
+          <div style="display:flex;gap:5px;align-items:center;margin-top:4px;flex-wrap:wrap">
+            <span class="badge b-conj">Conjunto</span>
+            <span class="badge ${tudo?'b-ven':'b-est'}">${tudo?'Concluído':'Em andamento'}</span>
+            <span style="font-size:11px;color:#888">Comprado ${fmtD(conj.dcomp)}</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-r" onclick="deletarConj('${conj.id}')">✕ Excluir</button>
+      </div>
+      <div class="conj-resumo" style="grid-template-columns:repeat(5,1fr)">
+        <div class="conj-met"><div class="conj-met-l">Custo de compra</div><div class="conj-met-v">${fmt(conj.custoTotal)}</div></div>
+        <div class="conj-met"><div class="conj-met-l">Gastos + extras</div><div class="conj-met-v" style="color:#854f0b">${fmt(totalGastos+totalExtras)}</div></div>
+        <div class="conj-met"><div class="conj-met-l">Custo real</div><div class="conj-met-v">${fmt(custoReal)}</div></div>
+        <div class="conj-met"><div class="conj-met-l">Faturado</div><div class="conj-met-v" style="color:#185fa5">${fmt(totalVendido)}</div></div>
+        <div class="conj-met">
+          <div class="conj-met-l">${tudo?'Lucro final':'Lucro parcial'}</div>
+          <div class="conj-met-v" style="color:${lucroParcial>=0?'#0f6e56':'#a32d2d'}">${lucroParcial>=0?'+':''}${fmt(lucroParcial)}</div>
+          ${!tudo&&qtdVend>0?`<div style="font-size:10px;color:#bbb;margin-top:2px">${qtdVend}/${qtdTotal} vendidos</div>`:''}
+        </div>
+      </div>
+      <div style="font-size:11px;color:#888;margin-bottom:4px">${qtdVend} de ${qtdTotal} itens vendidos</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="sml">Itens (no estoque)</div>
+      ${conjItems.length?conjItems.map(it=>{
+        const s=it.specs||{};
+        const specsLine=it.tipo==='pc'?[s.cpu,s.gpu,s.ram,s.sto].filter(Boolean).join(' · '):(s.descExtra||'');
+        return`<div class="item-row">
+          <div style="flex:1;min-width:120px">
+            <strong>${it.desc}</strong> <span style="font-size:10px;color:#aaa">${it.cat||it.tipo==='pc'?'PC':it.cat}</span>
+            ${specsLine?`<div style="font-size:11px;color:#888;margin-top:2px">${specsLine}</div>`:''}
+          </div>
+          <span class="badge ${it.status==='Em estoque'?'b-est':it.status==='Reservado'?'b-res':'b-ven'}">${it.status}</span>
+          <span style="font-weight:600;color:#0f6e56;min-width:80px">${it.venda!=null?fmt(it.venda):'—'}</span>
+          <span style="font-size:11px;color:#888">${it.comprador&&it.comprador!=='—'?it.comprador+' · ':''} ${it.dvenda?fmtD(it.dvenda):''}</span>
+          <div class="acoes">
+            <button class="btn btn-sm btn-b" onclick="abrirFicha(${it.id})">Ficha</button>
+
+          </div>
+        </div>`}).join(''):`<div style="font-size:12px;color:#bbb;padding:6px 0">Nenhum item encontrado no estoque</div>`}
+      <div class="sml" style="margin-top:12px">Gastos extras</div>
+      ${conj.gastos.length?conj.gastos.map(g=>`
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 0;border-bottom:1px solid #f5f5f3">
+          <span class="badge" style="background:#f8f8f6;color:#555;flex-shrink:0">${g.tipo}</span>
+          <span style="flex:1">${g.desc}</span>
+          <span style="color:#854f0b;font-weight:600;min-width:80px;text-align:right">${fmt(g.valor)}</span>
+          <span style="color:#bbb;font-size:11px;min-width:60px">${fmtD(g.data)}</span>
+          <button class="btn btn-sm btn-b" onclick="abrirEdicaoGasto('${conj.id}',${g.id})">Editar</button>
+          <button class="btn btn-sm btn-r" onclick="removeGasto('${conj.id}',${g.id})">✕</button>
+        </div>`).join(''):`<div style="font-size:12px;color:#bbb;padding:4px 0">Nenhum gasto registrado</div>`}
+      <div style="display:flex;gap:6px;align-items:center;margin-top:10px;flex-wrap:wrap">
+        <select id="gd-tipo-${conj.id}" style="width:auto;font-size:11px;padding:5px 8px"><option>Combustível</option><option>Frete</option><option>Reparo</option><option>Taxa de anúncio</option><option>Embalagem</option><option>Outro</option></select>
+        <input id="gd-desc-${conj.id}" placeholder="Descrição do gasto" style="flex:1;font-size:11px;padding:5px 8px;min-width:100px"/>
+        <input id="gd-valor-${conj.id}" type="number" placeholder="R$" style="width:80px;font-size:11px;padding:5px 8px"/>
+        <button class="btn btn-sm btn-a" onclick="addGastoConj('${conj.id}')">+ Gasto</button>
+      </div>
+    </div>`
+  }).join('');
+}
+
+// ===== PROJETOS =====
+function criarProjeto(){
+  const nome=gv('pj-nome');if(!nome){alert('Informe o nome do projeto.');return}
+  projetos.unshift({id:'proj_'+Date.now(),nome,dini:gv('pj-dini')||today(),pecas:[],finalizado:false});
+  ['pj-nome','pj-dini'].forEach(cv);save();renderProjetos();
+}
+function addPecaProjeto(projId){
+  const proj=projetos.find(p=>p.id===projId);if(!proj)return;
+  const dEl=document.getElementById('pp-desc-'+projId),cEl=document.getElementById('pp-custo-'+projId),catEl=document.getElementById('pp-cat-'+projId);
+  const desc=dEl.value.trim();if(!desc){alert('Informe a descrição.');return}
+  proj.pecas.push({id:Date.now(),desc,custo:parseFloat(cEl.value)||0,cat:catEl.value,data:today()});
+  dEl.value='';cEl.value='';save();renderProjetos();
+}
+function removePeca(projId,pecaId){const proj=projetos.find(p=>p.id===projId);if(!proj)return;proj.pecas=proj.pecas.filter(p=>p.id!==pecaId);save();renderProjetos()}
+function abrirEdicaoPeca(projId,pecaId){
+  editProjId=projId;editPecaId=pecaId;
+  const proj=projetos.find(p=>p.id===projId);
+  const peca=proj.pecas.find(p=>p.id===pecaId);
+  document.getElementById('mepp-cat').value=peca.cat||'Outro';
+  document.getElementById('mepp-desc').value=peca.desc;
+  document.getElementById('mepp-custo').value=peca.custo;
+  document.getElementById('mepp').classList.add('open');
+}
+function closeMEPP(){document.getElementById('mepp').classList.remove('open');editProjId=null;editPecaId=null}
+function salvarEdicaoPeca(){
+  const proj=projetos.find(p=>p.id===editProjId);
+  const peca=proj.pecas.find(p=>p.id===editPecaId);
+  peca.cat=document.getElementById('mepp-cat').value;
+  peca.desc=gv('mepp-desc')||peca.desc;
+  peca.custo=parseFloat(document.getElementById('mepp-custo').value)||peca.custo;
+  save();closeMEPP();renderProjetos();
+}
+function abrirFinalizarProjeto(projId){
+  projFinId=projId;
+  const proj=projetos.find(p=>p.id===projId);
+  const total=proj.pecas.reduce((a,p)=>a+(p.custo||0),0);
+  document.getElementById('mfp-t').textContent='Finalizar: '+proj.nome;
+  document.getElementById('mfp-custo').textContent=fmt(total);
+  ['mfp-cond','mfp-cpu','mfp-gpu','mfp-ram','mfp-sto','mfp-mb','mfp-psu','mfp-cool','mfp-fans','mfp-gab'].forEach(cv);
+  document.getElementById('mfp').classList.add('open');
+}
+function closeMFP(){document.getElementById('mfp').classList.remove('open');projFinId=null}
+function finalizarProjeto(){
+  const proj=projetos.find(p=>p.id===projFinId);
+  const total=proj.pecas.reduce((a,p)=>a+(p.custo||0),0);
+  items.unshift({id:Date.now(),tipo:'pc',desc:proj.nome,cond:gv('mfp-cond')||'—',custo:total,dcomp:proj.dini||today(),status:'Em estoque',venda:null,dvenda:'',comprador:'',origemProjeto:proj.nome,specs:{cpu:gv('mfp-cpu'),gpu:gv('mfp-gpu'),ram:gv('mfp-ram'),sto:gv('mfp-sto'),mb:gv('mfp-mb'),psu:gv('mfp-psu'),cool:gv('mfp-cool'),fans:gv('mfp-fans'),gab:gv('mfp-gab')}});
+  proj.finalizado=true;save();closeMFP();renderProjetos();
+  alert(`"${proj.nome}" adicionado ao estoque — custo total: ${fmt(total)}`);
+  goTab('estoque');
+}
+function deletarProjeto(projId){if(!confirm('Excluir este projeto?'))return;projetos=projetos.filter(p=>p.id!==projId);save();renderProjetos()}
+
+function renderProjetos(){
+  const lista=document.getElementById('proj-lista');
+  if(!projetos.length){lista.innerHTML=`<div class="card"><div class="empty">Nenhum projeto criado ainda.</div></div>`;return}
+  lista.innerHTML=projetos.map(proj=>{
+    const total=proj.pecas.reduce((a,p)=>a+(p.custo||0),0);
+    if(proj.finalizado)return`<div class="proj-card" style="opacity:.55"><div class="proj-header"><div><span class="badge b-ven" style="margin-right:6px">Finalizado</span><span style="font-weight:600">${proj.nome}</span></div><div style="display:flex;gap:6px;align-items:center"><span style="font-size:12px;color:#888">${fmt(total)} · ${proj.pecas.length} peça(s)</span><button class="btn btn-sm btn-r" onclick="deletarProjeto('${proj.id}')">✕</button></div></div></div>`;
+    return`<div class="proj-card">
+      <div class="proj-header">
+        <div><span class="badge b-proj" style="margin-right:6px">Em andamento</span><span style="font-weight:600">${proj.nome}</span><span style="font-size:11px;color:#888;margin-left:8px">Iniciado ${fmtD(proj.dini)}</span></div>
+        <div style="display:flex;gap:6px;align-items:center"><span style="font-size:14px;font-weight:600;color:#0f6e56">${fmt(total)}</span><button class="btn btn-sm btn-r" onclick="deletarProjeto('${proj.id}')">✕</button></div>
+      </div>
+      <div style="font-size:11px;color:#888;margin-bottom:8px">${proj.pecas.length} peça(s) adicionada(s)</div>
+      ${proj.pecas.map(p=>`<div class="peca-row"><span style="font-size:11px;color:#aaa;min-width:90px;flex-shrink:0">${p.cat}</span><span style="flex:1">${p.desc}</span><span style="font-weight:600;color:#0f6e56;min-width:80px;text-align:right">${fmt(p.custo)}</span><button class="btn btn-sm btn-b" onclick="abrirEdicaoPeca('${proj.id}',${p.id})">Editar</button><button class="btn btn-sm btn-r" onclick="removePeca('${proj.id}',${p.id})">✕</button></div>`).join('')}
+      <div style="border-top:1px solid #f0f0ee;margin:10px 0 8px"></div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <select id="pp-cat-${proj.id}" style="width:auto;font-size:11px;padding:5px 8px"><option>CPU</option><option>GPU</option><option>RAM</option><option>Armazenamento</option><option>Placa-mãe</option><option>Fonte</option><option>Cooler</option><option>Fan</option><option>Gabinete</option><option>Outro</option></select>
+        <input id="pp-desc-${proj.id}" placeholder="Descrição da peça" style="flex:1;font-size:11px;padding:5px 8px"/>
+        <input id="pp-custo-${proj.id}" type="number" placeholder="R$" style="width:80px;font-size:11px;padding:5px 8px"/>
+        <button class="btn btn-sm btn-g" onclick="addPecaProjeto('${proj.id}')">+ Peça</button>
+      </div>
+      ${proj.pecas.length?`<div style="margin-top:10px"><button class="btn btn-p" onclick="abrirFinalizarProjeto('${proj.id}')">Finalizar montagem → entrar no estoque</button></div>`:''}
+    </div>`
+  }).join('');
+}
+
+// ===== DASHBOARD =====
+function inRange(dv,ini,fim){if(!dv)return false;const d=new Date(dv+'T12:00:00');return d>=ini&&d<=fim}
+function semAtual(){const n=new Date(),d=n.getDay(),i=new Date(n);i.setDate(n.getDate()-d);i.setHours(0,0,0,0);const f=new Date(i);f.setDate(i.getDate()+6);f.setHours(23,59,59,999);return{ini:i,fim:f}}
+function mesAtual(){const n=new Date();return{ini:new Date(n.getFullYear(),n.getMonth(),1),fim:new Date(n.getFullYear(),n.getMonth()+1,0,23,59,59,999)}}
+
+// Lucro parcial proporcional de um conjunto: custo_real * (itens_vendidos / total_itens)
+// lucro parcial real: faturado total do conjunto - custo real total
+// negativo até recuperar o investimento, positivo só quando superar o custo
+function lucroParcialConj(c){
+  const ci=items.filter(i=>i.conjId===c.id);
+  if(!ci.length)return 0;
+  const faturado=ci.filter(i=>i.status==='Vendido').reduce((a,i)=>a+(i.venda||0),0);
+  if(!faturado)return 0;
+  const custoReal=c.custoTotal+c.gastos.reduce((b,g)=>b+g.valor,0)+custoExtrasConj(c.id);
+  return faturado-custoReal;
+}
+
+function calcPeriodo(ini,fim){
+  // itens individuais vendidos no período
+  const vindiv=items.filter(i=>!i.conjId&&i.status==='Vendido'&&inRange(i.dvenda,ini,fim));
+  const recIndiv=vindiv.reduce((a,i)=>a+(i.venda||0),0);
+  const cusIndiv=vindiv.reduce((a,i)=>a+i.custo+custoExtrasItem(i.id),0);
+  const lucroIndiv=recIndiv-cusIndiv;
+  // conjuntos com pelo menos um item vendido no período
+  const conjComVenda=conjuntos.filter(c=>items.some(i=>i.conjId===c.id&&i.status==='Vendido'&&inRange(i.dvenda,ini,fim)));
+  const recConj=conjComVenda.reduce((a,c)=>a+items.filter(i=>i.conjId===c.id&&i.status==='Vendido'&&inRange(i.dvenda,ini,fim)).reduce((b,i)=>b+(i.venda||0),0),0);
+  const nConj=conjComVenda.reduce((a,c)=>a+items.filter(i=>i.conjId===c.id&&i.status==='Vendido'&&inRange(i.dvenda,ini,fim)).length,0);
+  // lucro do conjunto no período = faturado no período - custo real total (só conta se fechou no período)
+  const conjFechadosPeriodo=conjuntos.filter(c=>{
+    const ci=items.filter(i=>i.conjId===c.id);
+    if(!ci.length||!ci.every(i=>i.status==='Vendido'))return false;
+    const ultima=ci.map(i=>i.dvenda).filter(Boolean).sort().pop();
+    return inRange(ultima,ini,fim);
+  });
+  const lucroConjFechados=conjFechadosPeriodo.reduce((a,c)=>a+lucroParcialConj(c),0);
+  return{n:vindiv.length+nConj,rec:recIndiv+recConj,luc:lucroIndiv+lucroConjFechados};
+}
+// lucro parcial dos conjuntos com itens vendidos no período (faturado no período - custo total)
+function calcLucroConjPeriodo(ini,fim){
+  return conjuntos.reduce((a,c)=>{
+    const vendidosPeriodo=items.filter(i=>i.conjId===c.id&&i.status==='Vendido'&&inRange(i.dvenda,ini,fim));
+    if(!vendidosPeriodo.length)return a;
+    const faturadoPeriodo=vendidosPeriodo.reduce((b,i)=>b+(i.venda||0),0);
+    const custoReal=c.custoTotal+c.gastos.reduce((b,g)=>b+g.valor,0)+custoExtrasConj(c.id);
+    // lucro parcial = faturado no período - custo real total (pode ser negativo)
+    const faturadoTotal=items.filter(i=>i.conjId===c.id&&i.status==='Vendido').reduce((b,i)=>b+(i.venda||0),0);
+    return a+(faturadoTotal-custoReal);
+  },0);
+}
+function mc(l,v,sub,cls=''){return`<div class="met"><div class="met-l">${l}</div><div class="met-v ${cls}">${v}</div>${sub?`<div class="met-sub">${sub}</div>`:''}</div>`}
+
+function renderDash(){
+  const{ini:si,fim:sf}=semAtual(),{ini:mi,fim:mf}=mesAtual();
+  const sem=calcPeriodo(si,sf),mes=calcPeriodo(mi,mf);
+
+  // geral acumulado — individuais
+  const vindiv=items.filter(i=>!i.conjId&&i.status==='Vendido');
+  const trI=vindiv.reduce((a,i)=>a+(i.venda||0),0);
+  const lucroI=vindiv.reduce((a,i)=>a+(i.venda||0)-(i.custo+custoExtrasItem(i.id)),0);
+  // geral acumulado — conjuntos (lucro proporcional de todos, parciais e completos)
+  const lucroC=conjuntos.reduce((a,c)=>a+lucroParcialConj(c),0);
+  const recC=conjuntos.reduce((a,c)=>a+items.filter(i=>i.conjId===c.id&&i.status==='Vendido').reduce((b,i)=>b+(i.venda||0),0),0);
+  const totalRec=trI+recC;
+  const totalLuc=lucroI+lucroC;
+
+  // conjuntos parciais em aberto
+  const conjParciais=conjuntos.filter(c=>{const ci=items.filter(i=>i.conjId===c.id);return ci.some(i=>i.status==='Vendido')&&!ci.every(i=>i.status==='Vendido');});
+  const lucroParciaisTotal=conjParciais.reduce((a,c)=>a+lucroParcialConj(c),0);
+
+  const est=items.filter(i=>i.status!=='Vendido');
+  const ev=est.filter(i=>!i.conjId).reduce((a,i)=>a+i.custo,0);
+  const conjAt=conjuntos.filter(c=>!items.filter(i=>i.conjId===c.id).every(i=>i.status==='Vendido')||items.filter(i=>i.conjId===c.id).length===0).length;
+  const projAt=projetos.filter(p=>!p.finalizado).length;
+
+  document.getElementById('d-sem').innerHTML=
+    mc('Vendas',sem.n)+mc('Faturamento',fmt(sem.rec))+
+    mc('Lucro',fmt(sem.luc),null,sem.luc>=0?'g':'r')+
+    mc('Resultado conj.',fmt(calcLucroConjPeriodo(si,sf)),'faturado − custo total',calcLucroConjPeriodo(si,sf)>=0?'g':'r');
+
+  document.getElementById('d-mes').innerHTML=
+    mc('Vendas',mes.n)+mc('Faturamento',fmt(mes.rec))+
+    mc('Lucro',fmt(mes.luc),null,mes.luc>=0?'g':'r')+
+    mc('Resultado conj.',fmt(calcLucroConjPeriodo(mi,mf)),'faturado − custo total',calcLucroConjPeriodo(mi,mf)>=0?'g':'r');
+
+  document.getElementById('d-ger').innerHTML=
+    mc('Receita total',fmt(totalRec))+
+    mc('Lucro total',fmt(totalLuc),'conj. fechados + individuais',totalLuc>=0?'g':'r')+
+    mc('Resultado conj. em aberto',fmt(lucroParciaisTotal),conjParciais.length+' conj. incompleto(s) — faturado − custo',lucroParciaisTotal>=0?'g':'r')+
+    mc('Em aberto',conjAt+' conj. · '+projAt+' proj.','aguardando conclusão','a');
+
+  const now=new Date(),meses=[];
+  for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);meses.push({y:d.getFullYear(),m:d.getMonth(),label:`${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`});}
+
+  const lucros=meses.map(({y,m})=>{
+    const ini=new Date(y,m,1),fim=new Date(y,m+1,0,23,59,59,999);
+    return Math.round(calcPeriodo(ini,fim).luc);
+  });
+  const itensMes=meses.map(({y,m})=>items.filter(i=>i.status==='Vendido'&&i.dvenda&&new Date(i.dvenda+'T12:00:00').getFullYear()===y&&new Date(i.dvenda+'T12:00:00').getMonth()===m).length);
+  const labels=meses.map(x=>x.label);
+  if(charts.l)charts.l.destroy();if(charts.i)charts.i.destroy();
+  charts.l=new Chart(document.getElementById('ch-l'),{type:'bar',data:{labels,datasets:[{label:'Lucro',data:lucros,backgroundColor:lucros.map(v=>v>=0?'#5dcaa5':'#f09595'),borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'R$'+v.toLocaleString('pt-BR')}}}}});
+  charts.i=new Chart(document.getElementById('ch-i'),{type:'bar',data:{labels,datasets:[{label:'Itens',data:itensMes,backgroundColor:'#85b7eb',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{stepSize:1}}}}});
+}
+
+['mv','mf','me','mege','mepp','mfp','meex','mev'].forEach(id=>document.getElementById(id).addEventListener('click',e=>{if(e.target===e.currentTarget)document.getElementById(id).classList.remove('open')}));
+
+
+
+// ===== ABA VENDAS =====
+let selecao={}; // id -> preco informado
+
+function custoRealItem(it){
+  // itens de conjunto: só mostra custo se foi informado individualmente (custo>0)
+  if(it.conjId) return it.custo>0 ? it.custo+custoExtrasItem(it.id) : null;
+  return it.custo+custoExtrasItem(it.id);
+}
+
+function renderVendas(){
+  const q=(document.getElementById('vf-busca')?.value||'').toLowerCase();
+  const ft=document.getElementById('vf-tipo')?.value||'';
+  const fs=document.getElementById('vf-status')?.value;
+  const modoVendido=fs==='Vendido';
+
+  // mostrar/ocultar carrinho e checkbox col quando no modo vendido
+  const carrinhoCard=document.getElementById('venda-carrinho-card');
+  const thSel=document.getElementById('th-sel-all');
+  if(modoVendido){
+    if(carrinhoCard)carrinhoCard.style.display='none';
+    if(thSel)thSel.style.display='none';
+  } else {
+    if(thSel)thSel.style.display='';
+  }
+
+  const list=items.filter(i=>{
+    const matchQ=i.desc.toLowerCase().includes(q)||((i.conjNome||'').toLowerCase().includes(q));
+    const matchT=!ft||(ft==='conj'?!!i.conjId:i.tipo===ft);
+    if(modoVendido) return matchQ&&matchT&&i.status==='Vendido';
+    const status=fs===undefined||fs===''?null:fs;
+    const matchS=!status||i.status===status;
+    return matchQ&&matchT&&matchS;
+  });
+
+  const tb=document.getElementById('venda-tbody');if(!tb)return;
+
+  if(modoVendido){
+    if(!list.length){tb.innerHTML=`<tr><td colspan="9" class="empty">Nenhuma venda registrada</td></tr>`;return;}
+    tb.innerHTML=list.sort((a,b)=>new Date(b.dvenda||0)-new Date(a.dvenda||0)).map(it=>rowVendido(it)).join('');
+    return;
+  }
+
+  if(!list.length){
+    tb.innerHTML=`<tr><td colspan="9" class="empty">Nenhum item encontrado</td></tr>`;
+    atualizarCarrinho();return;
+  }
+
+  tb.innerHTML=list.map(it=>{
+    if(it.status==='Vendido') return rowVendido(it);
+    const cr=custoRealItem(it);
+    const sel=selecao[it.id];
+    const checked=sel!==undefined;
+    const preco=sel||'';
+    const lucro=preco?(preco-cr):null;
+    const lc=lucro!=null?(lucro>=0?'#0f6e56':'#a32d2d'):'#bbb';
+    const badge=it.conjId?`<span class="badge b-conj" title="${it.conjNome}">Conj.</span>`:it.tipo==='pc'?`<span class="badge b-pc">PC</span>`:it.tipo==='div'?`<span class="badge b-div">${it.cat||'Diverso'}</span>`:`<span class="badge b-comp">${it.cat}</span>`;
+    const statusBadge=it.status==='Em estoque'?'b-est':'b-res';
+    const conjTag=it.conjNome?`<span class="conj-tag">${it.conjNome}</span>`:'';
+    const isConj=!!it.conjId;
+    const custoCell=cr!=null?`<span style="color:#854f0b;font-weight:600">${fmt(cr)}</span>`:`<span style="color:#bbb;font-size:11px">ver conjunto</span>`;
+    const precoCell=`<input type="number" placeholder="Informe o preço" value="${preco}" style="width:130px;padding:5px 8px;font-size:12px" onchange="setPreco(${it.id},this.value)" oninput="setPreco(${it.id},this.value)" ${checked?'':'disabled'}/>`;
+    const lucroEstim=isConj&&cr==null?null:lucro;
+    const lucroCell=lucroEstim!=null
+      ?`<span style="font-weight:600;color:${lc}">${lucroEstim>=0?'+':''}${fmt(lucroEstim)}</span>`
+      :(isConj?`<span style="font-size:11px;color:#888;font-style:italic">no conjunto</span>`:`<span style="color:#bbb">—</span>`);
+    return`<tr style="${checked?'background:#f0faf5':''}" id="vrow-${it.id}">
+      <td><input type="checkbox" ${checked?'checked':''} onchange="toggleItem(${it.id},this.checked)"/></td>
+      <td><strong>${it.desc}</strong>${conjTag}</td>
+      <td>${badge}</td>
+      <td>${it.cond}</td>
+      <td><span class="badge ${statusBadge}">${it.status}</span></td>
+      <td>${custoCell}</td>
+      <td>${precoCell}</td>
+      <td>${lucroCell}</td>
+      <td></td>
+    </tr>`
+  }).join('');
+  atualizarCarrinho();
+}
+
+function rowVendido(it){
+  const cr=custoRealItem(it);
+  const lv=cr!=null?(it.venda||0)-cr:null;
+  const lc=lv!=null?(lv>=0?'#0f6e56':'#a32d2d'):'#bbb';
+  const badge=it.conjId?`<span class="badge b-conj" title="${it.conjNome}">Conj.</span>`:it.tipo==='pc'?`<span class="badge b-pc">PC</span>`:it.tipo==='div'?`<span class="badge b-div">${it.cat||'Diverso'}</span>`:`<span class="badge b-comp">${it.cat}</span>`;
+  const conjTag=it.conjNome?`<span class="conj-tag">${it.conjNome}</span>`:'';
+  const custoCell=cr!=null?`<span style="color:#854f0b;font-weight:600">${fmt(cr)}</span>`:`<span style="color:#bbb;font-size:11px">ver conjunto</span>`;
+  const lucroCell=lv!=null?`<span style="font-weight:600;color:${lc}">${lv>=0?'+':''}${fmt(lv)}</span>`:`<span style="color:#bbb;font-size:11px">no conjunto</span>`;
+  const info=[];
+  if(it.dvenda)info.push(fmtD(it.dvenda));
+  if(it.comprador&&it.comprador!=='—')info.push(it.comprador);
+  if(it.contato)info.push(it.contato);
+  if(it.cidade)info.push(it.cidade);
+  if(it.pagamento)info.push(it.pagamento);
+  return`<tr style="background:#fafafa">
+    <td></td>
+    <td><strong>${it.desc}</strong>${conjTag}${info.length?`<div style="font-size:11px;color:#888;margin-top:2px">${info.join(' · ')}</div>`:''}</td>
+    <td>${badge}</td>
+    <td>${it.cond}</td>
+    <td><span class="badge b-ven">Vendido</span></td>
+    <td>${custoCell}</td>
+    <td style="font-weight:600;color:#185fa5">${fmt(it.venda||0)}</td>
+    <td>${lucroCell}</td>
+    <td><button class="btn btn-sm btn-a" onclick="abrirEdicaoVenda(${it.id})">Editar venda</button> <button class="btn btn-sm" onclick="estornarVenda(${it.id})">↩ Estornar</button> <button class="btn btn-sm btn-r" onclick="deletar(${it.id})">✕ Excluir</button></td>
+  </tr>`;
+}
+
+function toggleItem(id,checked){
+  if(checked){selecao[id]=0;}
+  else{delete selecao[id];}
+  renderVendas();
+}
+
+function setPreco(id,val){
+  const p=parseFloat(val)||0;
+  if(selecao[id]!==undefined){selecao[id]=p;}
+  atualizarCarrinho();
+  // atualizar lucro estimado na linha sem re-render completo
+  const it=items.find(i=>i.id===id);if(!it)return;
+  const cr=custoRealItem(it);
+  const lucro=p?p-cr:null;
+  const lc=lucro!=null?(lucro>=0?'#0f6e56':'#a32d2d'):'#bbb';
+  const row=document.getElementById('vrow-'+id);
+  if(row){
+    const cells=row.querySelectorAll('td');
+    if(cells[7])cells[7].textContent=lucro!=null?(lucro>=0?'+':'')+fmt(lucro).replace('R$ ','R$ '):'—';
+    if(cells[7])cells[7].style.color=lc;
+  }
+}
+
+function toggleSelecionarTodos(checked){
+  const rows=document.querySelectorAll('#venda-tbody input[type=checkbox]');
+  rows.forEach(cb=>{
+    cb.checked=checked;
+    const id=parseInt(cb.closest('tr')?.id?.replace('vrow-',''));
+    if(!isNaN(id)){if(checked)selecao[id]=selecao[id]||0;else delete selecao[id];}
+  });
+  renderVendas();
+}
+
+function limparSelecao(){selecao={};renderVendas();}
+
+let vendaGastos=[];
+function addGastoVenda(){
+  const desc=document.getElementById('vg-desc')?.value.trim();
+  const valor=parseFloat(document.getElementById('vg-valor')?.value)||0;
+  if(!desc){alert('Descreva o gasto.');return}
+  if(!valor){alert('Informe o valor.');return}
+  vendaGastos.push({id:Date.now(),tipo:document.getElementById('vg-tipo')?.value||'Outro',desc,valor});
+  document.getElementById('vg-desc').value='';
+  document.getElementById('vg-valor').value='';
+  atualizarCarrinho();
+}
+function removeGastoVenda(id){vendaGastos=vendaGastos.filter(g=>g.id!==id);atualizarCarrinho();}
+
+function popularHistComprador(){
+  const dl=document.getElementById('compradores-hist');if(!dl)return;
+  const nomes=[...new Set(items.filter(i=>i.comprador&&i.comprador!=='—').map(i=>i.comprador))];
+  dl.innerHTML=nomes.map(n=>`<option value="${n}">`).join('');
+}
+
+function atualizarCarrinho(){
+  const ids=Object.keys(selecao).map(Number);
+  const card=document.getElementById('venda-carrinho-card');
+  if(!card)return;
+  if(!ids.length){card.style.display='none';vendaGastos=[];return;}
+  card.style.display='block';
+  popularHistComprador();
+  const lista=document.getElementById('venda-carrinho-lista');
+  let totalSel=0,totalCusto=0;
+  lista.innerHTML=ids.map(id=>{
+    const it=items.find(i=>i.id===id);if(!it)return'';
+    const p=selecao[id]||0;
+    totalSel+=p;
+    const cr=custoRealItem(it);
+    if(cr!=null)totalCusto+=cr;
+    const lucro=p?(cr!=null?p-cr:null):null;
+    const lc=lucro!=null?(lucro>=0?'#0f6e56':'#a32d2d'):'#888';
+    const custoStr=cr!=null?`custo ${fmt(cr)}`:`<span style="color:#bbb">custo no conjunto</span>`;
+    const precoStr=p?fmt(p):`<span style="color:#e24b4a">sem preço</span>`;
+    return`<div style="display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid #f5f5f3;font-size:12px;flex-wrap:wrap">
+      <span style="flex:1;font-weight:500">${it.desc}${it.conjNome?` <span class="conj-tag">${it.conjNome}</span>`:''}</span>
+      <span style="color:#854f0b">${custoStr}</span>
+      <span style="font-weight:600">${precoStr}</span>
+      <span style="color:${lc};font-weight:600">${lucro!=null?(lucro>=0?'+':'')+fmt(lucro):'—'}</span>
+    </div>`
+  }).join('');
+  // gastos da venda
+  const gl=document.getElementById('venda-gastos-lista');
+  const totalG=vendaGastos.reduce((a,g)=>a+g.valor,0);
+  gl.innerHTML=vendaGastos.length?vendaGastos.map(g=>`
+    <div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:4px 0;border-bottom:1px solid #f5f5f3">
+      <span class="badge" style="background:#f8f8f6;color:#555;flex-shrink:0">${g.tipo}</span>
+      <span style="flex:1">${g.desc}</span>
+      <span style="color:#854f0b;font-weight:600">${fmt(g.valor)}</span>
+      <button class="btn btn-sm btn-r" onclick="removeGastoVenda(${g.id})">✕</button>
+    </div>`).join(''):'<div style="font-size:12px;color:#bbb;padding:2px 0">Nenhum gasto extra</div>';
+  const lucroEst=totalSel-totalCusto-totalG;
+  document.getElementById('venda-total-sel').textContent=fmt(totalSel);
+  document.getElementById('venda-total-gastos').textContent=fmt(totalG);
+  const le=document.getElementById('venda-lucro-est');
+  if(le){le.textContent=fmt(lucroEst);le.style.color=lucroEst>=0?'#0f6e56':'#a32d2d';}
+}
+
+function confirmarVendaMultipla(){
+  const ids=Object.keys(selecao).map(Number);
+  if(!ids.length){alert('Nenhum item selecionado.');return}
+  const semPreco=ids.filter(id=>!selecao[id]);
+  if(semPreco.length){alert(`${semPreco.length} item(ns) individual(is) sem preço. Informe o preço ou desmarque-os.`);return}
+  const comprador=document.getElementById('venda-comprador')?.value.trim()||'—';
+  const contato=document.getElementById('venda-contato')?.value.trim()||'';
+  const cidade=document.getElementById('venda-cidade')?.value.trim()||'';
+  const data=document.getElementById('venda-data')?.value||today();
+  const pagamento=document.getElementById('venda-pagamento')?.value||'';
+  const obs=document.getElementById('venda-obs')?.value.trim()||'';
+  const totalRec=ids.reduce((a,id)=>a+(selecao[id]||0),0);
+  const totalCusto=ids.reduce((a,id)=>{const it=items.find(i=>i.id===id);const cr=custoRealItem(it);return a+(cr!=null?cr:0);},0);
+  const totalG=vendaGastos.reduce((a,g)=>a+g.valor,0);
+  const lucro=totalRec-totalCusto-totalG;
+  const resumo=`Confirmar venda de ${ids.length} item(ns)?
+
+Receita: ${fmt(totalRec)}
+Gastos: ${fmt(totalG)}
+Lucro estimado: ${fmt(lucro)}
+
+Comprador: ${comprador}${cidade?' — '+cidade:''}`;
+  if(!confirm(resumo))return;
+  ids.forEach(id=>{
+    const it=items.find(i=>i.id===id);if(!it)return;
+    it.status='Vendido';
+    it.venda=selecao[id]||0;
+    it.comprador=comprador;
+    it.contato=contato;
+    it.cidade=cidade;
+    it.dvenda=data;
+    it.pagamento=pagamento;
+    it.obs=obs;
+    it.gastosVenda=[...vendaGastos];
+  });
+  selecao={};vendaGastos=[];
+  save();renderVendas();render();renderConjuntos();
+}
+
+// ===== EDIÇÃO DE VENDA REALIZADA =====
+let editVendaId=null;
+function abrirEdicaoVenda(id){
+  editVendaId=id;
+  const it=items.find(i=>i.id===id);
+  document.getElementById('mev-preco').value=it.venda||'';
+  document.getElementById('mev-data').value=it.dvenda||'';
+  document.getElementById('mev-comprador').value=it.comprador&&it.comprador!=='—'?it.comprador:'';
+  document.getElementById('mev-contato').value=it.contato||'';
+  document.getElementById('mev-cidade').value=it.cidade||'';
+  document.getElementById('mev-pagamento').value=it.pagamento||'';
+  document.getElementById('mev-obs').value=it.obs||'';
+  document.getElementById('mev').classList.add('open');
+}
+function closeMEV(){document.getElementById('mev').classList.remove('open');editVendaId=null}
+function salvarEdicaoVenda(){
+  const it=items.find(i=>i.id===editVendaId);if(!it)return;
+  const preco=parseFloat(document.getElementById('mev-preco').value);
+  if(preco)it.venda=preco;
+  const data=document.getElementById('mev-data').value;
+  if(data)it.dvenda=data;
+  it.comprador=document.getElementById('mev-comprador').value.trim()||it.comprador;
+  it.contato=document.getElementById('mev-contato').value.trim();
+  it.cidade=document.getElementById('mev-cidade').value.trim();
+  it.pagamento=document.getElementById('mev-pagamento').value;
+  it.obs=document.getElementById('mev-obs').value.trim();
+  save();closeMEV();render();
+  if(it.conjId)renderConjuntos();
+}
+
+// ===== ITENS EXTRAS =====
+function custoExtrasItem(itemId){
+  return extras.filter(e=>e.vinculoId===itemId).reduce((a,e)=>a+e.custo,0);
+}
+function custoExtrasConj(conjId){
+  // extras vinculados diretamente ao conjunto ou a qualquer item do conjunto
+  const itemIds=items.filter(i=>i.conjId===conjId).map(i=>i.id);
+  return extras.filter(e=>e.vinculoId===conjId||itemIds.includes(e.vinculoId)).reduce((a,e)=>a+e.custo,0);
+}
+function popularSelectVinculo(selId){
+  const sel=document.getElementById(selId);if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Selecione um item ou conjunto...</option>';
+  // itens individuais em estoque
+  const itensDisp=items.filter(i=>!i.conjId&&i.status!=='Vendido');
+  if(itensDisp.length){
+    const og=document.createElement('optgroup');og.label='Itens no estoque';
+    itensDisp.forEach(i=>{const o=document.createElement('option');o.value='item_'+i.id;o.textContent=i.desc;og.appendChild(o);});
+    sel.appendChild(og);
+  }
+  // conjuntos ativos
+  const conjAtivos=conjuntos.filter(c=>!items.filter(i=>i.conjId===c.id).every(i=>i.status==='Vendido'));
+  if(conjAtivos.length){
+    const og=document.createElement('optgroup');og.label='Conjuntos em andamento';
+    conjAtivos.forEach(c=>{const o=document.createElement('option');o.value='conj_'+c.id;o.textContent=c.nome;og.appendChild(o);});
+    sel.appendChild(og);
+  }
+  if(cur)sel.value=cur;
+}
+function addItemExtra(){
+  const desc=document.getElementById('ex-desc')?.value.trim();
+  if(!desc){alert('Informe a descrição.');return}
+  const custo=parseFloat(document.getElementById('ex-custo')?.value)||0;
+  if(!custo){alert('Informe o custo.');return}
+  const vinculo=document.getElementById('ex-vinculo')?.value;
+  if(!vinculo){alert('Selecione um item ou conjunto para vincular.');return}
+  const isConj=vinculo.startsWith('conj_');
+  const vinculoId=isConj?vinculo.substring(5):parseInt(vinculo.substring(5));
+  const vinculoNome=isConj
+    ?(conjuntos.find(c=>c.id===vinculoId)?.nome||'Conjunto')
+    :(items.find(i=>i.id===vinculoId)?.desc||'Item');
+  extras.push({
+    id:Date.now(),desc,
+    cat:document.getElementById('ex-cat')?.value||'Outro',
+    custo,
+    data:document.getElementById('ex-data')?.value||today(),
+    vinculoId,vinculoNome,isConj
+  });
+  ['ex-desc','ex-custo','ex-data'].forEach(cv);
+  save();renderExtras();
+  // atualizar conjuntos se necessário
+  if(isConj)renderConjuntos();
+}
+let editExId=null;
+function abrirEdicaoExtra(id){
+  editExId=id;
+  const ex=extras.find(e=>e.id===id);
+  document.getElementById('meex-desc').value=ex.desc;
+  document.getElementById('meex-cat').value=ex.cat||'Outro';
+  document.getElementById('meex-custo').value=ex.custo;
+  document.getElementById('meex-data').value=ex.data||'';
+  document.getElementById('meex').classList.add('open');
+}
+function closeMEEX(){document.getElementById('meex').classList.remove('open');editExId=null}
+function salvarEdicaoExtra(){
+  const ex=extras.find(e=>e.id===editExId);
+  ex.desc=document.getElementById('meex-desc').value.trim()||ex.desc;
+  ex.cat=document.getElementById('meex-cat').value;
+  ex.custo=parseFloat(document.getElementById('meex-custo').value)||ex.custo;
+  ex.data=document.getElementById('meex-data').value||ex.data;
+  save();closeMEEX();renderExtras();
+  if(ex.isConj)renderConjuntos();
+}
+function deletarExtra(id){
+  if(!confirm('Remover este item extra?'))return;
+  const ex=extras.find(e=>e.id===id);
+  extras=extras.filter(e=>e.id!==id);
+  save();renderExtras();
+  if(ex&&ex.isConj)renderConjuntos();
+}
+function renderExtras(){
+  popularSelectVinculo('ex-vinculo');
+  // popular filtro de vínculos
+  const sel=document.getElementById('ex-f-vinculo');
+  if(sel){
+    const cur=sel.value;
+    const nomes=[...new Set(extras.map(e=>e.vinculoNome))];
+    sel.innerHTML='<option value="">Todos os vínculos</option>'+nomes.map(n=>`<option${cur===n?' selected':''}>${n}</option>`).join('');
+  }
+  const q=(document.getElementById('ex-busca')?.value||'').toLowerCase();
+  const fv=document.getElementById('ex-f-vinculo')?.value||'';
+  const list=extras.filter(e=>
+    (e.desc.toLowerCase().includes(q)||(e.vinculoNome||'').toLowerCase().includes(q))
+    &&(!fv||e.vinculoNome===fv)
+  ).sort((a,b)=>new Date(b.data||0)-new Date(a.data||0));
+  const tb=document.getElementById('ex-tbody');if(!tb)return;
+  if(!list.length){tb.innerHTML=`<tr><td colspan="6" class="empty">Nenhum item extra registrado</td></tr>`;return}
+  tb.innerHTML=list.map(ex=>`<tr>
+    <td><strong>${ex.desc}</strong></td>
+    <td><span class="badge b-comp">${ex.cat||'Outro'}</span></td>
+    <td><span class="badge ${ex.isConj?'b-conj':'b-pc'}">${ex.vinculoNome}</span></td>
+    <td style="font-weight:600;color:#854f0b">${fmt(ex.custo)}</td>
+    <td>${fmtD(ex.data)}</td>
+    <td><div class="acoes">
+      <button class="btn btn-sm btn-b" onclick="abrirEdicaoExtra(${ex.id})">Editar</button>
+      <button class="btn btn-sm btn-r" onclick="deletarExtra(${ex.id})">✕</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+// ===== BACKUP =====
+function exportarBackup(){
+  const data={items,conjuntos,projetos,extras,exportadoEm:new Date().toISOString(),versao:10};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const d=new Date();
+  const ds=`${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
+  a.href=url;a.download=`backup_estoque_${ds}.json`;a.click();
+  URL.revokeObjectURL(url);
+  atualizarInfoBackup();
+}
+function importarBackup(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!Array.isArray(data.items)){alert('Arquivo inválido ou corrompido.');return;}
+      const dataStr=data.exportadoEm?new Date(data.exportadoEm).toLocaleDateString('pt-BR'):'data desconhecida';
+      if(!confirm(`Importar backup de ${dataStr}?\nIsso vai SUBSTITUIR os dados atuais.`))return;
+      items=data.items||[];
+      conjuntos=data.conjuntos||[];
+      projetos=data.projetos||[];
+      extras=data.extras||[];
+      save();render();renderConjuntos();renderProjetos();renderExtras();
+      atualizarInfoBackup();
+      alert('Backup importado! '+items.length+' itens, '+conjuntos.length+' conjuntos, '+projetos.length+' projetos.\n\nSalvando na nuvem...');
+    }catch(err){alert('Erro ao importar: '+err.message);}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+function atualizarInfoBackup(){
+  const el=document.getElementById('backup-info');if(!el)return;
+  const total=items.length+conjuntos.length+projetos.length;
+  el.textContent=total>0?`${items.length} itens · ${conjuntos.length} conj. · ${projetos.length} proj. · ${extras.length} extras`:'  ';
+}
+
+
+load();
+</script>
+
+
+</div></body></html>
